@@ -1,0 +1,33 @@
+{{template "base/header.html" .}}
+
+<div class="panel panel-default">
+  <div class="panel-heading">发布</div>
+  <div class="panel-body">
+    <form class="form-horizontal" role="form" action="/create" method="POST">
+      {{.form.Form.ValidatorSummary}}
+      {{if .success}}
+      <div class="alert alert-success">{{.success}}</div>
+      {{end}}
+      <div class="form-group">
+        <label for="username" class="col-sm-2 control-label">{{.form.UserName.Text}}</label>
+        <div class="col-sm-10">
+            {{.form.UserName.Render `class="form-control"` `placeholder="用户名"`}}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="content" class="col-sm-2 control-label">{{.form.Content.Text}}</label>
+        <div class="col-sm-10">
+            {{.form.Content.Render `class="form-control"` `placeholder="需要发布的内容"` `rows="5"`}}
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary">发布</button>
+          <a class="btn btn-default" href="/">返回</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{template "base/footer.html" .}}
