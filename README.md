@@ -3,7 +3,7 @@ handy
 a web framework for golang
 
 ### Install
-> go get git://github.com/jimmykuu/gopher.git
+> go get github.com/go-web-framework/handy
 
 
 ### 参考项目
