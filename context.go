@@ -192,24 +192,22 @@ func (ctx *Context) Status(status int) {
 }
 
 func (ctx *Context) Render(tmpl string, data interface{}) {
-	debug, ok := Config["Debug"].(bool)
-	if ok && debug {
-		templates = nil
+	if tmpl != "" {
 		loadTemplate()
-	}
-	if data == nil {
-		data = map[string]interface{}{}
-	}
-	err := templates.ExecuteTemplate(ctx.ResponseWriter, tmpl, data)
-	if err != nil {
-		http.Error(ctx.ResponseWriter, err.Error(), http.StatusInternalServerError)
+		if data == nil {
+			data = map[string]interface{}{}
+		}
+		err := templates.ExecuteTemplate(ctx.ResponseWriter, tmpl, data)
+		if err != nil {
+			http.Error(ctx.ResponseWriter, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
 func (ctx *Context) Json(v interface{}) {
 	content, err := json.Marshal(v)
 	if err == nil {
-		ctx.ResponseWriter.Header().Set("Content-Type", "application/json;charset=UTF-8")
+		ctx.ResponseWriter.Header().Set("Content-Type", "application/json")
 		ctx.ResponseWriter.Write(content)
 	}
 }

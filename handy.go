@@ -25,7 +25,6 @@ func (app *Application) New(config map[string]interface{}) *Application {
 	if config != nil {
 		Config = config
 	}
-	loadTemplate()
 	application := &Application{Router: newRouter()}
 	return application
 }
@@ -33,6 +32,14 @@ func (app *Application) New(config map[string]interface{}) *Application {
 func (app *Application) Connection(dsn, conn string) {
 	driverName = dsn
 	dataSourceName = conn
+}
+
+func (app *Application) FuncMap(tmplFunc map[string]interface{}) {
+	if len(tmplFunc) > 0 {
+		for k, v := range tmplFunc {
+			funcMap[k] = v
+		}
+	}
 }
 
 func (app *Application) Start() {

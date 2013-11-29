@@ -11,14 +11,22 @@ import (
 )
 
 var (
+	funcMap   template.FuncMap
 	templates *template.Template
 )
 
+func init() {
+	funcMap = make(template.FuncMap)
+}
+
 func loadTemplate() {
-	funcMap := templateFuncMap()
+	templates = nil
 	templatePath, ok := Config["TemplatePath"].(string)
 	if !ok {
 		return
+	}
+	for k, v := range templateFuncMap() {
+		funcMap[k] = v
 	}
 	err := buildTemplate(templatePath, funcMap)
 	if err != nil {
@@ -27,7 +35,7 @@ func loadTemplate() {
 }
 
 func templateFuncMap() template.FuncMap {
-	funcMap := template.FuncMap{
+	return template.FuncMap{
 		"eq": Equal,
 		"set": func(renderArgs map[string]interface{}, key string, value interface{}) template.HTML {
 			renderArgs[key] = value
@@ -53,8 +61,6 @@ func templateFuncMap() template.FuncMap {
 			return date.Format(format)
 		},
 	}
-
-	return funcMap
 }
 
 func buildTemplate(dir string, funcMap template.FuncMap) error {
