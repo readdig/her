@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/go-web-framework/handy"
-	"github.com/go-web-framework/handy/samples/book/handler"
+	"github.com/go-framework/handy"
+	"github.com/go-framework/handy/samples/book/handler"
 	_ "github.com/mattn/go-sqlite3"
 	"html/template"
 )
