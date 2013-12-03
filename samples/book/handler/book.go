@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/go-web-framework/handy"
-	"github.com/go-web-framework/handy/samples/book/form"
-	"github.com/go-web-framework/handy/samples/book/model"
+	"github.com/go-framework/handy"
+	"github.com/go-framework/handy/samples/book/form"
+	"github.com/go-framework/handy/samples/book/model"
 )
 
 type bookHandler struct{}
