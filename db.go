@@ -1,4 +1,4 @@
-package handy
+package web
 
 import (
 	"database/sql"

@@ -1,8 +1,4 @@
-// Copyright 2012 The Gorilla Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
-package handy
+package web
 
 import (
 	"fmt"
@@ -12,7 +8,7 @@ import (
 
 // NewRouter returns a new router instance.
 func newRouter() *Router {
-	return &Router{namedRoutes: make(map[string]*Route)}
+	return &Router{namedRoutes: make(map[string]*Route), strictSlash: true}
 }
 
 // Router registers routes to be matched and dispatches a handler.
@@ -38,15 +34,11 @@ func (r *Router) Match(req *http.Request, match *RouteMatch) bool {
 }
 
 // ServeHTTP dispatches the handler registered in the matched route.
-//
-// When there is a match, the route variables can be retrieved calling
-// mux.Vars(request).
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	ctx := &Context{Request: req, ResponseWriter: w, Params: map[string]string{}}
+	ctx := Context{Request: req, ResponseWriter: w, Params: map[string]string{}}
 	// Clean path to canonical form and redirect.
 	if p := cleanPath(req.URL.Path); p != req.URL.Path {
-		w.Header().Set("Location", p)
-		w.WriteHeader(http.StatusMovedPermanently)
+		ctx.RedirectPermanent(p)
 		return
 	}
 
@@ -59,8 +51,10 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	var match RouteMatch
 	var handler Handler
+	var pathVars []string
 	if r.Match(req, &match) {
 		handler = match.Handler
+		pathVars = match.PathVars
 		setVars(req, match.Vars)
 		setCurrentRoute(req, match.Route)
 
@@ -69,10 +63,10 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	if handler == nil {
-		http.Error(ctx.ResponseWriter, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		ctx.Abort(404, http.StatusText(http.StatusNotFound))
 		return
 	}
-	handler.HandleRequest(ctx)
+	routeHandler(&ctx, handler, pathVars)
 }
 
 // Get returns a route registered with the given name.
@@ -140,12 +134,6 @@ func (r *Router) Handle(path string, handler Handler) *Route {
 	return r.NewRoute().Path(path).Handler(handler)
 }
 
-// HandleFunc registers a new route with a matcher for the URL path.
-// See Route.Path() and Route.HandlerFunc().
-func (r *Router) HandleFunc(path string, f HandlerFunc) *Route {
-	return r.NewRoute().Path(path).HandlerFunc(f)
-}
-
 // Headers registers a new route with a matcher for request header values.
 // See Route.Headers().
 func (r *Router) Headers(pairs ...string) *Route {
@@ -196,9 +184,10 @@ func (r *Router) Schemes(schemes ...string) *Route {
 
 // RouteMatch stores information about a matched route.
 type RouteMatch struct {
-	Route   *Route
-	Handler Handler
-	Vars    map[string]string
+	Route    *Route
+	Handler  Handler
+	PathVars []string
+	Vars     map[string]string
 }
 
 // ----------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package handy
+package web
 
 import (
 	"bytes"
@@ -212,6 +212,7 @@ func (v *routeRegexpGroup) setMatch(req *http.Request, m *RouteMatch, r *Route) 
 	if v.path != nil {
 		pathVars := v.path.regexp.FindStringSubmatch(req.URL.Path)
 		if pathVars != nil {
+			m.PathVars = pathVars
 			for k, v := range v.path.varsN {
 				m.Vars[v] = pathVars[k+1]
 			}

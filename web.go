@@ -1,15 +1,17 @@
-package handy
+package web
 
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"net/http/pprof"
 )
 
 var (
 	Config = map[string]interface{}{
 		"TemplatePath": "templates",
-		"CookieSecret": "handy_secret_cookie",
+		"CookieSecret": "web_secret_cookie",
 		"Address":      "",
 		"Port":         "8080",
 		"Debug":        false,
@@ -18,14 +20,14 @@ var (
 )
 
 type Application struct {
-	Router *Router
+	Route *Router
 }
 
 func (app *Application) New(config map[string]interface{}) *Application {
 	if config != nil {
 		Config = config
 	}
-	application := &Application{Router: newRouter()}
+	application := &Application{Route: newRouter()}
 	return application
 }
 
@@ -51,8 +53,30 @@ func (app *Application) Start() {
 	if !ok {
 		port = "8080"
 	}
+	debug, ok := Config["Debug"].(bool)
+	if !ok {
+		debug = false
+	}
+
 	listen := fmt.Sprintf("%s:%s", address, port)
-	http.Handle("/", app.Router)
+	mux := http.NewServeMux()
+	if debug {
+		mux.Handle("/debug/pprof", http.HandlerFunc(pprof.Index))
+		mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+		mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+		mux.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+		mux.Handle("/debug/pprof/block", pprof.Handler("block"))
+		mux.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
+		mux.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
+	}
+	mux.Handle("/", app.Route)
+
+	l, err := net.Listen("tcp", listen)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Print("Listening on " + listen + "...")
-	log.Fatal(http.ListenAndServe(listen, nil))
+	log.Fatal(http.Serve(l, mux))
 }

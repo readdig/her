@@ -1,4 +1,4 @@
-package handy
+package web
 
 import (
 	"bytes"
@@ -37,16 +37,16 @@ func (ctx *Context) Abort(status int, body string) {
 }
 
 // Redirect is a helper method.
-func (ctx *Context) Redirect(url_ string) {
-	ctx.ResponseWriter.Header().Set("Location", url_)
+func (ctx *Context) Redirect(url string) {
+	ctx.ResponseWriter.Header().Set("Location", url)
 	ctx.ResponseWriter.WriteHeader(http.StatusFound)
-	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url_))
+	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url))
 }
 
-func (ctx *Context) RedirectPermanent(url_ string) {
-	ctx.ResponseWriter.Header().Set("Location", url_)
+func (ctx *Context) RedirectPermanent(url string) {
+	ctx.ResponseWriter.Header().Set("Location", url)
 	ctx.ResponseWriter.WriteHeader(http.StatusMovedPermanently)
-	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url_))
+	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url))
 }
 
 // Notmodified writes a 304 HTTP response
@@ -325,13 +325,4 @@ func Purge(maxAge int) int {
 		}
 	}
 	return count
-}
-
-// ClearHandler wraps an http.Handler and clears request values at the end
-// of a request lifetime.
-func ClearHandler(h Handler) Handler {
-	return HandlerFunc(func(ctx *Context) {
-		defer Clear(ctx.Request)
-		h.HandleRequest(ctx)
-	})
 }

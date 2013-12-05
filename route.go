@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package handy
+package web
 
 import (
 	"errors"
@@ -54,6 +54,9 @@ func (r *Route) Match(req *http.Request, match *RouteMatch) bool {
 	if match.Vars == nil {
 		match.Vars = make(map[string]string)
 	}
+	if match.PathVars == nil {
+		match.PathVars = make([]string, 0)
+	}
 	// Set variables.
 	if r.regexp != nil {
 		r.regexp.setMatch(req, match, r)
@@ -84,11 +87,6 @@ func (r *Route) Handler(handler Handler) *Route {
 		r.handler = handler
 	}
 	return r
-}
-
-// HandlerFunc sets a handler function for the route.
-func (r *Route) HandlerFunc(f HandlerFunc) *Route {
-	return r.Handler(f)
 }
 
 // GetHandler returns the handler for the route, if any.
