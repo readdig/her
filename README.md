@@ -27,7 +27,7 @@ import (
 )
 
 var (
-    application *handy.Application
+    application = &handy.Application{}
 )
 
 func main() {

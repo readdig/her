@@ -4,6 +4,10 @@ import (
 	"github.com/go-web-framework/handy"
 )
 
+var (
+	DB = &handy.DB{}
+)
+
 type Book struct {
 	Id       int
 	UserName string
@@ -11,7 +15,7 @@ type Book struct {
 }
 
 func (b *Book) Insert() bool {
-	db := handy.DB.Open()
+	db := DB.Open()
 	defer db.Close()
 	sql := "insert into books(username, content) values(?,?)"
 	_, err := db.Exec(sql, b.UserName, b.Content)
@@ -23,7 +27,7 @@ func (b *Book) Insert() bool {
 
 func (b *Book) GetAll() []*Book {
 	books := make([]*Book, 0)
-	db := handy.DB.Open()
+	db := DB.Open()
 	defer db.Close()
 	sql := "SELECT id,username,content FROM books"
 	rows, err := db.Query(sql)

@@ -5,13 +5,9 @@ import (
 	"log"
 )
 
-type db struct{}
+type DB struct{}
 
-var (
-	DB = &db{}
-)
-
-func (d *db) Open() *sql.DB {
+func (d *DB) Open() *sql.DB {
 	db, err := sql.Open(driverName, dataSourceName)
 	if err != nil {
 		log.Fatal(err)

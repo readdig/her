@@ -1,9 +1,10 @@
 package main
 
+import _ "github.com/mattn/go-sqlite3"
+
 import (
 	"github.com/go-web-framework/handy"
 	"github.com/go-web-framework/handy/samples/book/handler"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 		"Port":         "8080",
 		"Debug":        true,
 	}
-	application *handy.Application
+	application = &handy.Application{}
 )
 
 func main() {
