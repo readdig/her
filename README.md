@@ -14,7 +14,9 @@ a web framework for golang
 ### 安装
 请确保Go环境已经安装，如未安装请参考 [Go 环境安装](http://golang.org/doc/install.html)，请安装最新版。
 
-> go get github.com/web-framework/handy
+``` go
+go get github.com/web-framework/handy
+```
 
 ### 使用
 ```go
