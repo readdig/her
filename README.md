@@ -5,7 +5,7 @@ a web framework for golang
 ### 介绍
 用 Go 实现的一个简单的 MVC 模式框架，目前支持：
 
-* 路由/Restful(Route)
+* 路由/RESTFUL(route)
 * 控制器(handler)
 * 视图(templates)
 * 表单(form)
@@ -14,11 +14,35 @@ a web framework for golang
 ### 安装
 请确保Go环境已经安装，如未安装请参考 [Go 环境安装](http://golang.org/doc/install.html)，请安装最新版。
 
-安装web框架
 > go get github.com/web-framework/handy
 
 ### 使用
-> import "github.com/web-framework/handy"
+```go
+package main
+
+import (
+    "github.com/go-web-framework/handy"
+)
+
+var (
+    application *handy.Application
+)
+
+func main() {
+    app := application.New(nil)
+    app.Route.Handle("/", func() string {
+        return "hello world!"
+    })
+    app.Route.Handle("/hello/{val}", func(val string) string {
+        return "hello " + val
+    })
+    app.Route.Handle("/hi/{val}", func(ctx *handy.Context, val string) {
+        ctx.WriteString("hi " + val)
+    })
+    app.Start()
+}
+```
+启动程序访问8080端口，默认端口为8080
 
 ### 参考项目
 - gorilla [mux](https://github.com/gorilla/mux)
