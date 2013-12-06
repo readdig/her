@@ -1,4 +1,4 @@
-package web
+package handy
 
 import (
 	"net/http"

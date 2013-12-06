@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/go-framework/web"
-	"github.com/go-framework/web/samples/book/handler"
+	"github.com/go-web-framework/handy"
+	"github.com/go-web-framework/handy/samples/book/handler"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -14,7 +14,7 @@ var (
 		"Port":         "8080",
 		"Debug":        true,
 	}
-	application *web.Application
+	application *handy.Application
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	app.Connection("sqlite3", "./book.s3db")
 
 	app.Route.Handle("/", handler.Book.HomeHandler)
-	app.Route.Handle("/static/{path:.*}", web.StaticFileHandler("static"))
+	app.Route.Handle("/static/{path:.*}", handy.StaticFileHandler("static"))
 	app.Route.Handle("/create", handler.Book.CreateHandler)
 
 	app.Start()

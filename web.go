@@ -1,4 +1,4 @@
-package web
+package handy
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ var (
 	Config = map[string]interface{}{
 		"TemplatePath": "templates",
 		"CookieSecret": "web_secret_cookie",
-		"Address":      "",
+		"Address":      "0.0.0.0",
 		"Port":         "8080",
 		"Debug":        false,
 	}
@@ -47,7 +47,7 @@ func (app *Application) FuncMap(tmplFunc map[string]interface{}) {
 func (app *Application) Start() {
 	address, ok := Config["Address"].(string)
 	if !ok {
-		address = ""
+		address = "0.0.0.0"
 	}
 	port, ok := Config["Port"].(string)
 	if !ok {

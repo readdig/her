@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/go-framework/web"
+	"github.com/go-web-framework/handy"
 )
 
 type Book struct {
@@ -11,7 +11,7 @@ type Book struct {
 }
 
 func (b *Book) Insert() bool {
-	db := web.DB.Open()
+	db := handy.DB.Open()
 	defer db.Close()
 	sql := "insert into books(username, content) values(?,?)"
 	_, err := db.Exec(sql, b.UserName, b.Content)
@@ -23,7 +23,7 @@ func (b *Book) Insert() bool {
 
 func (b *Book) GetAll() []*Book {
 	books := make([]*Book, 0)
-	db := web.DB.Open()
+	db := handy.DB.Open()
 	defer db.Close()
 	sql := "SELECT id,username,content FROM books"
 	rows, err := db.Query(sql)
