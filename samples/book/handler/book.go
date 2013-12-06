@@ -13,10 +13,6 @@ var (
 	bookModel = &model.Book{}
 )
 
-func (h *bookHandler) HelloHandler(val string) string {
-	return "hello " + val
-}
-
 func (h *bookHandler) HomeHandler(ctx *web.Context) {
 	books := bookModel.GetAll()
 	tmpl := map[string]interface{}{}

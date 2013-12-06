@@ -1,9 +1,7 @@
 package web
 
 import (
-	"fmt"
 	"net/http"
-	"path"
 )
 
 // NewRouter returns a new router instance.
@@ -51,22 +49,16 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	var match RouteMatch
 	var handler Handler
-	var pathVars []string
+	var vars []string
 	if r.Match(req, &match) {
 		handler = match.Handler
-		pathVars = match.PathVars
-		setVars(req, match.Vars)
-		setCurrentRoute(req, match.Route)
-
-		for k, v := range match.Vars {
-			ctx.Params[k] = v
-		}
+		vars = match.Vars
 	}
 	if handler == nil {
 		ctx.Abort(404, http.StatusText(http.StatusNotFound))
 		return
 	}
-	routeHandler(&ctx, handler, pathVars)
+	routeHandler(&ctx, handler, vars)
 }
 
 // Get returns a route registered with the given name.
@@ -184,94 +176,7 @@ func (r *Router) Schemes(schemes ...string) *Route {
 
 // RouteMatch stores information about a matched route.
 type RouteMatch struct {
-	Route    *Route
-	Handler  Handler
-	PathVars []string
-	Vars     map[string]string
-}
-
-// ----------------------------------------------------------------------------
-// Helpers
-// ----------------------------------------------------------------------------
-
-// cleanPath returns the canonical path for p, eliminating . and .. elements.
-// Borrowed from the net/http package.
-func cleanPath(p string) string {
-	if p == "" {
-		return "/"
-	}
-	if p[0] != '/' {
-		p = "/" + p
-	}
-	np := path.Clean(p)
-	// path.Clean removes trailing slash except for root;
-	// put the trailing slash back if necessary.
-	if p[len(p)-1] == '/' && np != "/" {
-		np += "/"
-	}
-	return np
-}
-
-// uniqueVars returns an error if two slices contain duplicated strings.
-func uniqueVars(s1, s2 []string) error {
-	for _, v1 := range s1 {
-		for _, v2 := range s2 {
-			if v1 == v2 {
-				return fmt.Errorf("mux: duplicated route variable %q", v2)
-			}
-		}
-	}
-	return nil
-}
-
-// mapFromPairs converts variadic string parameters to a string map.
-func mapFromPairs(pairs ...string) (map[string]string, error) {
-	length := len(pairs)
-	if length%2 != 0 {
-		return nil, fmt.Errorf(
-			"mux: number of parameters must be multiple of 2, got %v", pairs)
-	}
-	m := make(map[string]string, length/2)
-	for i := 0; i < length; i += 2 {
-		m[pairs[i]] = pairs[i+1]
-	}
-	return m, nil
-}
-
-// matchInArray returns true if the given string value is in the array.
-func matchInArray(arr []string, value string) bool {
-	for _, v := range arr {
-		if v == value {
-			return true
-		}
-	}
-	return false
-}
-
-// matchMap returns true if the given key/value pairs exist in a given map.
-func matchMap(toCheck map[string]string, toMatch map[string][]string,
-	canonicalKey bool) bool {
-	for k, v := range toCheck {
-		// Check if key exists.
-		if canonicalKey {
-			k = http.CanonicalHeaderKey(k)
-		}
-		if values := toMatch[k]; values == nil {
-			return false
-		} else if v != "" {
-			// If value was defined as an empty string we only check that the
-			// key exists. Otherwise we also check for equality.
-			valueExists := false
-			for _, value := range values {
-				if v == value {
-					valueExists = true
-					break
-				}
-			}
-			if !valueExists {
-				return false
-			}
-		}
-	}
-	return true
+	Route   *Route
+	Handler Handler
+	Vars    []string
 }

@@ -36,7 +36,6 @@ func loadTemplate() {
 
 func templateFuncMap() template.FuncMap {
 	return template.FuncMap{
-		"eq": Equal,
 		"set": func(renderArgs map[string]interface{}, key string, value interface{}) template.HTML {
 			renderArgs[key] = value
 			return template.HTML("")

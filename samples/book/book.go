@@ -23,7 +23,6 @@ func main() {
 	app.Connection("sqlite3", "./book.s3db")
 
 	app.Route.Handle("/", handler.Book.HomeHandler)
-	app.Route.Handle("/hello/{val}", handler.Book.HelloHandler)
 	app.Route.Handle("/static/{path:.*}", web.StaticFileHandler("static"))
 	app.Route.Handle("/create", handler.Book.CreateHandler)
 

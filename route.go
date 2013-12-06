@@ -52,10 +52,7 @@ func (r *Route) Match(req *http.Request, match *RouteMatch) bool {
 		match.Handler = r.handler
 	}
 	if match.Vars == nil {
-		match.Vars = make(map[string]string)
-	}
-	if match.PathVars == nil {
-		match.PathVars = make([]string, 0)
+		match.Vars = make([]string, 0)
 	}
 	// Set variables.
 	if r.regexp != nil {

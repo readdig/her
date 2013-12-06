@@ -199,23 +199,16 @@ type routeRegexpGroup struct {
 
 // setMatch extracts the variables from the URL once a route matches.
 func (v *routeRegexpGroup) setMatch(req *http.Request, m *RouteMatch, r *Route) {
+	hostVars := make([]string, 0)
+	pathVars := make([]string, 0)
 	// Store host variables.
 	if v.host != nil {
-		hostVars := v.host.regexp.FindStringSubmatch(getHost(req))
-		if hostVars != nil {
-			for k, v := range v.host.varsN {
-				m.Vars[v] = hostVars[k+1]
-			}
-		}
+		hostVars = v.host.regexp.FindStringSubmatch(getHost(req))
 	}
 	// Store path variables.
 	if v.path != nil {
-		pathVars := v.path.regexp.FindStringSubmatch(req.URL.Path)
+		pathVars = v.path.regexp.FindStringSubmatch(req.URL.Path)
 		if pathVars != nil {
-			m.PathVars = pathVars
-			for k, v := range v.path.varsN {
-				m.Vars[v] = pathVars[k+1]
-			}
 			// Check if we should redirect.
 			if r.strictSlash {
 				p1 := strings.HasSuffix(req.URL.Path, "/")
@@ -232,6 +225,10 @@ func (v *routeRegexpGroup) setMatch(req *http.Request, m *RouteMatch, r *Route) 
 			}
 		}
 	}
+	vars := make([]string, len(hostVars)+len(pathVars))
+	copy(vars, hostVars)
+	copy(vars[len(hostVars):], pathVars)
+	m.Vars = vars
 }
 
 // getHost tries its best to return the request host.
