@@ -21,8 +21,8 @@ func init() {
 
 func loadTemplate() {
 	templates = nil
-	templatePath, ok := Config["TemplatePath"].(string)
-	if !ok {
+	templatePath := Config.Get("TemplatePath").String()
+	if templatePath == "" {
 		return
 	}
 	for k, v := range templateFuncMap() {

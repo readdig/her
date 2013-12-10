@@ -10,9 +10,8 @@ import (
 var (
 	config = map[string]interface{}{
 		"TemplatePath": "templates",
-		"CookieSecret": "web_secret_cookie",
 		"Address":      "127.0.0.1",
-		"Port":         "8080",
+		"Port":         8080,
 		"Debug":        true,
 	}
 	application = &handy.Application{}

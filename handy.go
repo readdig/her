@@ -8,15 +8,12 @@ import (
 	"net/http/pprof"
 )
 
+const VERSION = "0.0.1 beta"
+
 var (
-	Config = map[string]interface{}{
-		"TemplatePath": "templates",
-		"CookieSecret": "web_secret_cookie",
-		"Address":      "0.0.0.0",
-		"Port":         "8080",
-		"Debug":        false,
-	}
-	driverName, dataSourceName string
+	Config         *config
+	driverName     string
+	dataSourceName string
 )
 
 type Application struct {
@@ -24,9 +21,8 @@ type Application struct {
 }
 
 func (app *Application) New(config map[string]interface{}) *Application {
-	if config != nil {
-		Config = config
-	}
+	Config = LoadConfig(config)
+	loadTemplate()
 	application := &Application{Route: newRouter()}
 	return application
 }
@@ -45,20 +41,22 @@ func (app *Application) FuncMap(tmplFunc map[string]interface{}) {
 }
 
 func (app *Application) Start() {
-	address, ok := Config["Address"].(string)
-	if !ok {
+	address := Config.Get("Address").String()
+	if address == "" {
 		address = "0.0.0.0"
 	}
-	port, ok := Config["Port"].(string)
-	if !ok {
-		port = "8080"
+	port := Config.Get("Port").Int()
+	if port == 0 {
+		port = 8080
 	}
-	debug, ok := Config["Debug"].(bool)
-	if !ok {
-		debug = false
-	}
+	debug := Config.Get("Debug").Bool()
+	tmplPath := Config.Get("TemplatePath").String()
+	listen := fmt.Sprintf("%s:%d", address, port)
 
-	listen := fmt.Sprintf("%s:%s", address, port)
+	watcher := NewWatcher()
+	watcher.Listen(tmplPath)
+	watcher.Notify()
+
 	mux := http.NewServeMux()
 	if debug {
 		mux.Handle("/debug/pprof", http.HandlerFunc(pprof.Index))

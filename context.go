@@ -130,10 +130,7 @@ func getCookieSig(key string, val []byte, timestamp string) string {
 }
 
 func (ctx *Context) SetSecureCookie(name string, val string, age int64) {
-	cookieSecret, ok := Config["CookieSecret"].(string)
-	if !ok {
-		return
-	}
+	cookieSecret := Config.Get("CookieSecret").String()
 	//base64 encode the val
 	if len(cookieSecret) == 0 {
 		return
@@ -162,10 +159,7 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 		timestamp := parts[1]
 		sig := parts[2]
 
-		cookieSecret, ok := Config["CookieSecret"].(string)
-		if !ok {
-			return "", false
-		}
+		cookieSecret := Config.Get("CookieSecret").String()
 
 		if getCookieSig(cookieSecret, []byte(val), timestamp) != sig {
 			return "", false
@@ -192,7 +186,6 @@ func (ctx *Context) Status(status int) {
 
 func (ctx *Context) Render(tmpl string, data interface{}) {
 	if tmpl != "" {
-		loadTemplate()
 		if data == nil {
 			data = map[string]interface{}{}
 		}
