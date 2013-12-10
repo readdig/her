@@ -22,7 +22,6 @@ type Application struct {
 
 func (app *Application) New(config map[string]interface{}) *Application {
 	Config = LoadConfig(config)
-	loadTemplate()
 	application := &Application{Route: newRouter()}
 	return application
 }
@@ -53,6 +52,7 @@ func (app *Application) Start() {
 	tmplPath := Config.Get("TemplatePath").String()
 	listen := fmt.Sprintf("%s:%d", address, port)
 
+	loadTemplate()
 	watcher := NewWatcher()
 	watcher.Listen(tmplPath)
 	watcher.Notify()
