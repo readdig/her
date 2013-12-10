@@ -44,13 +44,13 @@ func (app *Application) Start() {
 	if address == "" {
 		address = "0.0.0.0"
 	}
-	port := Config.Get("Port").Int()
-	if port == 0 {
-		port = 8080
+	port := Config.Get("Port").String()
+	if port == "" {
+		port = "8080"
 	}
 	debug := Config.Get("Debug").Bool()
 	tmplPath := Config.Get("TemplatePath").String()
-	listen := fmt.Sprintf("%s:%d", address, port)
+	listen := fmt.Sprintf("%s:%s", address, port)
 
 	loadTemplate()
 	watcher := NewWatcher()
