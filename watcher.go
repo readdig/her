@@ -39,7 +39,7 @@ func (w *Watcher) Notify() {
 			for {
 				select {
 				case ev := <-watcher.Event:
-					loadTemplate()
+					templates = loadTemplate()
 					log.Println("event:", ev)
 					continue
 				case err := <-watcher.Error:

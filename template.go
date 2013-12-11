@@ -19,19 +19,19 @@ func init() {
 	funcMap = make(template.FuncMap)
 }
 
-func loadTemplate() {
-	templates = nil
+func loadTemplate() *template.Template {
 	templatePath := Config.Get("TemplatePath").String()
 	if templatePath == "" {
-		return
+		return nil
 	}
 	for k, v := range templateFuncMap() {
 		funcMap[k] = v
 	}
-	err := buildTemplate(templatePath, funcMap)
+	t, err := buildTemplate(templatePath, funcMap)
 	if err != nil {
 		log.Printf("Can't read template file %v,", err)
 	}
+	return t
 }
 
 func templateFuncMap() template.FuncMap {
@@ -62,8 +62,9 @@ func templateFuncMap() template.FuncMap {
 	}
 }
 
-func buildTemplate(dir string, funcMap template.FuncMap) error {
-	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+func buildTemplate(dir string, funcMap template.FuncMap) (*template.Template, error) {
+	var t *template.Template
+	return t, filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			filetext, err := ioutil.ReadFile(path)
 			if err != nil {
@@ -74,13 +75,13 @@ func buildTemplate(dir string, funcMap template.FuncMap) error {
 			name = strings.Replace(name, `\`, `/`, -1)
 
 			var tmpl *template.Template
-			if templates == nil {
-				templates = template.New(name)
+			if t == nil {
+				t = template.New(name)
 			}
-			if name == templates.Name() {
-				tmpl = templates
+			if name == t.Name() {
+				tmpl = t
 			} else {
-				tmpl = templates.New(name)
+				tmpl = t.New(name)
 			}
 			_, err = tmpl.Funcs(funcMap).Parse(text)
 			if err != nil {

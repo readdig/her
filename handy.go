@@ -52,7 +52,8 @@ func (app *Application) Start() {
 	tmplPath := Config.Get("TemplatePath").String()
 	listen := fmt.Sprintf("%s:%d", address, port)
 
-	loadTemplate()
+	templates = loadTemplate()
+
 	watcher := NewWatcher()
 	watcher.Listen(tmplPath)
 	watcher.Notify()
