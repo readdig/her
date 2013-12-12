@@ -23,7 +23,10 @@ type Context struct {
 
 // WriteString writes string data into the response object.
 func (ctx *Context) WriteString(content string) {
-	ctx.ResponseWriter.Write([]byte(content))
+	ctx.Write([]byte(content))
+}
+func (ctx *Context) Status(status int) {
+	ctx.WriteHeader(status)
 }
 
 // Abort is a helper method that sends an HTTP header and an optional
@@ -31,42 +34,42 @@ func (ctx *Context) WriteString(content string) {
 // Once it has been called, any return value from the handler will
 // not be written to the response.
 func (ctx *Context) Abort(status int, body string) {
-	ctx.ResponseWriter.WriteHeader(status)
-	ctx.ResponseWriter.Write([]byte(body))
+	ctx.WriteHeader(status)
+	ctx.Write([]byte(body))
 }
 
 // Redirect is a helper method.
 func (ctx *Context) Redirect(url string) {
-	ctx.ResponseWriter.Header().Set("Location", url)
-	ctx.ResponseWriter.WriteHeader(http.StatusFound)
-	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url))
+	ctx.Header().Set("Location", url)
+	ctx.WriteHeader(http.StatusFound)
+	ctx.Write([]byte("Redirecting to: " + url))
 }
 
 func (ctx *Context) RedirectPermanent(url string) {
-	ctx.ResponseWriter.Header().Set("Location", url)
-	ctx.ResponseWriter.WriteHeader(http.StatusMovedPermanently)
-	ctx.ResponseWriter.Write([]byte("Redirecting to: " + url))
+	ctx.Header().Set("Location", url)
+	ctx.WriteHeader(http.StatusMovedPermanently)
+	ctx.Write([]byte("Redirecting to: " + url))
 }
 
 // Notmodified writes a 304 HTTP response
 func (ctx *Context) NotModified() {
-	ctx.ResponseWriter.WriteHeader(304)
+	ctx.WriteHeader(304)
 }
 
 // NotFound writes a 404 HTTP response
 func (ctx *Context) NotFound(message string) {
-	ctx.ResponseWriter.WriteHeader(404)
-	ctx.ResponseWriter.Write([]byte(message))
+	ctx.WriteHeader(404)
+	ctx.Write([]byte(message))
 }
 
 //Unauthorized writes a 401 HTTP response
 func (ctx *Context) Unauthorized() {
-	ctx.ResponseWriter.WriteHeader(401)
+	ctx.WriteHeader(401)
 }
 
 //Forbidden writes a 403 HTTP response
 func (ctx *Context) Forbidden() {
-	ctx.ResponseWriter.WriteHeader(403)
+	ctx.WriteHeader(403)
 }
 
 // ContentType sets the Content-Type header for an HTTP response.
@@ -180,10 +183,6 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 	return "", false
 }
 
-func (ctx *Context) Status(status int) {
-	ctx.ResponseWriter.WriteHeader(status)
-}
-
 func (ctx *Context) Render(tmpl string, data interface{}) {
 	if tmpl != "" {
 		if data == nil {
@@ -199,7 +198,7 @@ func (ctx *Context) Render(tmpl string, data interface{}) {
 func (ctx *Context) Json(v interface{}) {
 	content, err := json.Marshal(v)
 	if err == nil {
-		ctx.ResponseWriter.Header().Set("Content-Type", "application/json")
-		ctx.ResponseWriter.Write(content)
+		ctx.Header().Set("Content-Type", "application/json")
+		ctx.Write(content)
 	}
 }

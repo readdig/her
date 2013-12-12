@@ -11,6 +11,8 @@ var (
 	config = map[string]interface{}{
 		"TemplatePath": "templates",
 		"Address":      "127.0.0.1",
+		"XSRFCookies":  true,
+		"CookieSecret": "book_secert",
 		"Port":         8080,
 		"Debug":        true,
 	}

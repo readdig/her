@@ -40,7 +40,7 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 		content = sval.Interface().([]byte)
 	}
 	ctx.SetHeader("Content-Length", strconv.Itoa(len(content)), true)
-	ctx.ResponseWriter.Write(content)
+	ctx.Write(content)
 }
 
 func redirectHandler(url string, code int) Handler {
