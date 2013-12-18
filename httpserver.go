@@ -40,6 +40,8 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	watcher.Notify()
+
 	req.ParseForm()
 	if len(req.Form) > 0 {
 		for k, v := range req.Form {

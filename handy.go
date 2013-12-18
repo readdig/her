@@ -11,6 +11,7 @@ import (
 const VERSION = "0.0.1 beta"
 
 var (
+	watcher        *Watcher
 	Config         *config
 	driverName     string
 	dataSourceName string
@@ -54,9 +55,8 @@ func (app *Application) Start() {
 
 	templates = loadTemplate()
 
-	watcher := NewWatcher()
+	watcher = NewWatcher()
 	watcher.Listen(tmplPath)
-	watcher.Notify()
 
 	mux := http.NewServeMux()
 	if debug {
