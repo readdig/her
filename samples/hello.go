@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/go-web-framework/handy"
+	"github.com/go-code/handy"
 )
 
 var (

@@ -1,7 +1,7 @@
 package form
 
 import (
-	"github.com/go-web-framework/handy"
+	"github.com/go-code/handy"
 )
 
 type BookForm struct {

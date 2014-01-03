@@ -3,8 +3,8 @@ package main
 import _ "github.com/mattn/go-sqlite3"
 
 import (
-	"github.com/go-web-framework/handy"
-	"github.com/go-web-framework/handy/samples/book/handler"
+	"github.com/go-code/handy"
+	"github.com/go-code/handy/samples/book/handler"
 )
 
 var (

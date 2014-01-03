@@ -1,7 +1,7 @@
 package handy
 
 import (
-	"github.com/go-web-framework/handy/notify"
+	"github.com/go-code/handy/notify"
 	"log"
 	"os"
 	"path/filepath"
