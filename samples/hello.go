@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/go-code/handy"
+	"github.com/go-code/her"
 )
 
 var (
-	application = &handy.Application{}
+	application = &her.Application{}
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	app.Route.Handle("/hello/{val}", func(val string) string {
 		return "hello " + val
 	})
-	app.Route.Handle("/hi/{val}", func(ctx *handy.Context, val string) {
+	app.Route.Handle("/hi/{val}", func(ctx *her.Context, val string) {
 		ctx.WriteString("hi " + val)
 	})
 	app.Start()

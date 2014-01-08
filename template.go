@@ -1,4 +1,4 @@
-package handy
+package her
 
 import (
 	"html/template"
@@ -20,7 +20,7 @@ func init() {
 }
 
 func loadTemplate() *template.Template {
-	templatePath := Config.Get("TemplatePath").String()
+	templatePath := Config.String("TemplatePath")
 	if templatePath == "" {
 		return nil
 	}

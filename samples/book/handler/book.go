@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/go-code/handy"
-	"github.com/go-code/handy/samples/book/form"
-	"github.com/go-code/handy/samples/book/model"
+	"github.com/go-code/her"
+	"github.com/go-code/her/samples/book/form"
+	"github.com/go-code/her/samples/book/model"
 )
 
 type bookHandler struct{}
@@ -13,7 +13,7 @@ var (
 	bookModel = &model.Book{}
 )
 
-func (h *bookHandler) HomeHandler(ctx *handy.Context) {
+func (h *bookHandler) HomeHandler(ctx *her.Context) {
 	books := bookModel.GetAll()
 	tmpl := map[string]interface{}{}
 	tmpl["books"] = books
@@ -21,7 +21,7 @@ func (h *bookHandler) HomeHandler(ctx *handy.Context) {
 	ctx.Render("index.html", tmpl)
 }
 
-func (h *bookHandler) CreateHandler(ctx *handy.Context) {
+func (h *bookHandler) CreateHandler(ctx *her.Context) {
 	form := form.NewBookForm(ctx)
 	tmpl := map[string]interface{}{}
 

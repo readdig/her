@@ -1,4 +1,4 @@
-handy
+her
 =====
 a web framework for golang
 
@@ -15,7 +15,7 @@ a web framework for golang
 请确保Go环境已经安装，如未安装请参考 [Go 环境安装](http://golang.org/doc/install.html)，请安装最新版。
 
 ``` go
-go get github.com/go-code/handy
+go get github.com/go-code/her
 ```
 
 ### 使用
@@ -23,11 +23,11 @@ go get github.com/go-code/handy
 package main
 
 import (
-    "github.com/go-code/handy"
+    "github.com/go-code/her"
 )
 
 var (
-    application = &handy.Application{}
+    application = &her.Application{}
 )
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
     app.Route.Handle("/hello/{val}", func(val string) string {
         return "hello " + val
     })
-    app.Route.Handle("/hi/{val}", func(ctx *handy.Context, val string) {
+    app.Route.Handle("/hi/{val}", func(ctx *her.Context, val string) {
         ctx.WriteString("hi " + val)
     })
     app.Start()

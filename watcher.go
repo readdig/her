@@ -1,7 +1,7 @@
-package handy
+package her
 
 import (
-	"github.com/go-code/handy/notify"
+	"github.com/go-code/her/notify"
 	"log"
 	"os"
 	"path/filepath"

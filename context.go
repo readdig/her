@@ -1,4 +1,4 @@
-package handy
+package her
 
 import (
 	"bytes"
@@ -133,7 +133,7 @@ func getCookieSig(key string, val []byte, timestamp string) string {
 }
 
 func (ctx *Context) SetSecureCookie(name string, val string, age int64) {
-	cookieSecret := Config.Get("CookieSecret").String()
+	cookieSecret := Config.String("CookieSecret")
 	//base64 encode the val
 	if len(cookieSecret) == 0 {
 		return
@@ -162,7 +162,7 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 		timestamp := parts[1]
 		sig := parts[2]
 
-		cookieSecret := Config.Get("CookieSecret").String()
+		cookieSecret := Config.String("CookieSecret")
 
 		if getCookieSig(cookieSecret, []byte(val), timestamp) != sig {
 			return "", false

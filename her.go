@@ -1,4 +1,4 @@
-package handy
+package her
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ const VERSION = "0.0.1 beta"
 
 var (
 	watcher        *Watcher
-	Config         *config
+	Config         *MergedConfig
 	driverName     string
 	dataSourceName string
 )
@@ -41,16 +41,16 @@ func (app *Application) FuncMap(tmplFunc map[string]interface{}) {
 }
 
 func (app *Application) Start() {
-	address := Config.Get("Address").String()
+	address := Config.String("Address")
 	if address == "" {
 		address = "0.0.0.0"
 	}
-	port := Config.Get("Port").Int()
+	port := Config.Int("Port")
 	if port == 0 {
 		port = 8080
 	}
-	debug := Config.Get("Debug").Bool()
-	tmplPath := Config.Get("TemplatePath").String()
+	debug := Config.Bool("Debug")
+	tmplPath := Config.String("TemplatePath")
 	listen := fmt.Sprintf("%s:%d", address, port)
 
 	templates = loadTemplate()

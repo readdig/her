@@ -1,11 +1,11 @@
 package model
 
 import (
-	"github.com/go-code/handy"
+	"github.com/go-code/her"
 )
 
 var (
-	DB = &handy.DB{}
+	DB = &her.DB{}
 )
 
 type Book struct {

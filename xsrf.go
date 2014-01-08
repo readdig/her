@@ -1,4 +1,4 @@
-package handy
+package her
 
 import (
 	"crypto/rand"
@@ -20,7 +20,7 @@ func genToken() string {
 func genTokenHTML() template.HTML {
 	name := "_xsrf"
 	token := genToken()
-	xsrfCookie := Config.Get("XSRFCookies").Bool()
+	xsrfCookie := Config.Bool("XSRFCookies")
 	if token != "" && xsrfCookie {
 		return template.HTML(fmt.Sprintf(`<input type="hidden" value="%s" name="%s" id="%s">`, name, token, name))
 	}

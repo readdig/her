@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package handy
+package her
 
 import (
 	"errors"
@@ -199,7 +199,7 @@ func (r *Route) Headers(pairs ...string) *Route {
 // It accepts a template with zero or more URL variables enclosed by {}.
 // Variables can define an optional regexp pattern to me matched:
 //
-// - {name} matches anything until the next dot.
+// - {name} matches anything until the next her.
 //
 // - {name:pattern} matches the given regexp pattern.
 //

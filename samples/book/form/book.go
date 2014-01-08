@@ -1,20 +1,20 @@
 package form
 
 import (
-	"github.com/go-code/handy"
+	"github.com/go-code/her"
 )
 
 type BookForm struct {
-	Form     *handy.Form
-	UserName *handy.TextField
-	Content  *handy.TextAreaField
+	Form     *her.Form
+	UserName *her.TextField
+	Content  *her.TextAreaField
 }
 
-func NewBookForm(ctx *handy.Context) *BookForm {
+func NewBookForm(ctx *her.Context) *BookForm {
 	form := &BookForm{}
-	form.UserName = handy.NewTextField("username", "用户名", "", handy.Required{}, handy.Length{Min: 3, Max: 10})
-	form.Content = handy.NewTextAreaField("content", "内容", "", handy.Required{}, handy.Length{Min: 1, Max: 200})
+	form.UserName = her.NewTextField("username", "用户名", "", her.Required{}, her.Length{Min: 3, Max: 10})
+	form.Content = her.NewTextAreaField("content", "内容", "", her.Required{}, her.Length{Min: 1, Max: 200})
 
-	form.Form = handy.InitForm(ctx, form)
+	form.Form = her.InitForm(ctx, form)
 	return form
 }

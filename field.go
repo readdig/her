@@ -1,4 +1,4 @@
-package handy
+package her
 
 import (
 	"fmt"

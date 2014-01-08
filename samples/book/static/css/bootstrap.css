@@ -54,7 +54,7 @@ a {
 }
 
 a:focus {
-  outline: thin dotted;
+  outline: thin herted;
 }
 
 a:active,
@@ -68,7 +68,7 @@ h1 {
 }
 
 abbr[title] {
-  border-bottom: 1px dotted;
+  border-bottom: 1px herted;
 }
 
 b,
@@ -333,7 +333,7 @@ a:focus {
 }
 
 a:focus {
-  outline: thin dotted #333;
+  outline: thin herted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -668,7 +668,7 @@ dd {
 abbr[title],
 abbr[data-original-title] {
   cursor: help;
-  border-bottom: 1px dotted #999999;
+  border-bottom: 1px herted #999999;
 }
 
 abbr.initialism {
@@ -1902,7 +1902,7 @@ select optgroup {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: thin dotted #333;
+  outline: thin herted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2256,7 +2256,7 @@ textarea.input-lg {
 }
 
 .btn:focus {
-  outline: thin dotted #333;
+  outline: thin herted #333;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3462,7 +3462,7 @@ input[type="button"].btn-block {
   vertical-align: middle;
   border-top: 4px solid #000000;
   border-right: 4px solid transparent;
-  border-bottom: 0 dotted;
+  border-bottom: 0 herted;
   border-left: 4px solid transparent;
 }
 
@@ -3580,7 +3580,7 @@ input[type="button"].btn-block {
 
 .dropup .caret,
 .navbar-fixed-bottom .dropdown .caret {
-  border-top: 0 dotted;
+  border-top: 0 herted;
   border-bottom: 4px solid #000000;
   content: "";
 }

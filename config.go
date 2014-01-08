@@ -1,60 +1,47 @@
-package handy
+package her
 
-type config struct {
-	conf map[string]interface{}
-	key  string
+type MergedConfig struct {
+	config map[string]interface{}
 }
 
-type configFuc interface {
-	String(key string) string
-	Int(key string) int
-	Int64(key string) int64
-	Bool(key string) bool
-	Float(key string) float64
+func LoadConfig(conf map[string]interface{}) *MergedConfig {
+	return &MergedConfig{config: conf}
 }
 
-func LoadConfig(conf map[string]interface{}) *config {
-	return &config{conf: conf}
-}
-
-func (c *config) Get(key string) *config {
-	c.key = key
-	return c
-}
-
-func (c *config) String() string {
-	val, ok := c.conf[c.key].(string)
+func (c *MergedConfig) String(key string) string {
+	val, ok := c.config[key].(string)
 	if !ok {
 		return ""
 	}
 	return val
 }
 
-func (c *config) Int() int {
-	val, ok := c.conf[c.key].(int)
+func (c *MergedConfig) Int(key string) int {
+	val, ok := c.config[key].(int)
 	if !ok {
 		return 0
 	}
 	return val
 }
 
-func (c *config) Int64() int64 {
-	val, ok := c.conf[c.key].(int64)
+func (c *MergedConfig) Int64(key string) int64 {
+	val, ok := c.config[key].(int64)
 	if !ok {
 		return 0
 	}
 	return val
 }
 
-func (c *config) Bool() bool {
-	val, ok := c.conf[c.key].(bool)
+func (c *MergedConfig) Bool(key string) bool {
+	val, ok := c.config[key].(bool)
 	if !ok {
 		return false
 	}
 	return val
 }
-func (c *config) Float() float64 {
-	val, ok := c.conf[c.key].(float64)
+
+func (c *MergedConfig) Float(key string) float64 {
+	val, ok := c.config[key].(float64)
 	if !ok {
 		return 0.0
 	}
