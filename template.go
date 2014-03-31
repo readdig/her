@@ -59,7 +59,6 @@ func templateFuncMap() template.FuncMap {
 		"datetime": func(date time.Time, format string) string {
 			return date.Format(format)
 		},
-		"xsrf_form_html": genTokenHTML,
 	}
 }
 

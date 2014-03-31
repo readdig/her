@@ -189,11 +189,9 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 	return "", false
 }
 
-func (ctx *Context) Render(tmpl string, data interface{}) {
+func (ctx *Context) Render(tmpl string, data map[string]interface{}) {
 	if tmpl != "" {
-		if data == nil {
-			data = map[string]interface{}{}
-		}
+		data["xsrf_form_html"] = genTokenHTML(ctx)
 		err := templates.ExecuteTemplate(ctx.ResponseWriter, tmpl, data)
 		if err != nil {
 			http.Error(ctx.ResponseWriter, err.Error(), http.StatusInternalServerError)
