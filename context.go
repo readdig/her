@@ -19,6 +19,7 @@ type Context struct {
 	Request *http.Request
 	http.ResponseWriter
 	Params map[string]string
+	Token  string
 }
 
 // WriteString writes string data into the response object.
@@ -101,6 +102,11 @@ func (ctx *Context) SetHeader(hdr string, val string, unique bool) {
 	} else {
 		ctx.Header().Add(hdr, val)
 	}
+}
+
+// token is xsrf
+func (ctx *Context) GetToken() string {
+	return ctx.Token
 }
 
 // SetCookie adds a cookie header to the response.

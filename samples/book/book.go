@@ -10,7 +10,7 @@ import (
 var (
 	config = map[string]interface{}{
 		"TemplatePath": "templates",
-		"Address":      "127.0.0.1",
+		"Address":      "0.0.0.0",
 		"XSRFCookies":  true,
 		"CookieSecret": "book_secert",
 		"Port":         8080,

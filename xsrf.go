@@ -17,9 +17,9 @@ func genToken() string {
 	return val
 }
 
-func genTokenHTML() template.HTML {
+func genTokenHTML(ctx *Context) template.HTML {
 	name := "_xsrf"
-	token := genToken()
+	token := ctx.GetToken()
 	xsrfCookie := Config.Bool("XSRFCookies")
 	if token != "" && xsrfCookie {
 		return template.HTML(fmt.Sprintf(`<input type="hidden" value="%s" name="%s" id="%s">`, name, token, name))

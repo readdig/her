@@ -33,7 +33,7 @@ func (r *Router) Match(req *http.Request, match *RouteMatch) bool {
 
 // ServeHTTP dispatches the handler registered in the matched route.
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	ctx := Context{Request: req, ResponseWriter: w, Params: map[string]string{}}
+	ctx := Context{Request: req, ResponseWriter: w, Params: map[string]string{}, Token: genToken()}
 	// Clean path to canonical form and redirect.
 	if p := cleanPath(req.URL.Path); p != req.URL.Path {
 		ctx.RedirectPermanent(p)
