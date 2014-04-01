@@ -22,7 +22,8 @@ func genTokenHTML(ctx *Context) template.HTML {
 	token := ctx.GetToken()
 	xsrfCookie := Config.Bool("XSRFCookies")
 	if token != "" && xsrfCookie {
-		return template.HTML(fmt.Sprintf(`<input type="hidden" value="%s" name="%s" id="%s">`, token, name, name))
+		ctx.SetCookie(NewCookie(name, token, 24))
+		return template.HTML(fmt.Sprintf(`<input type="hidden" value="%s" name="%s">`, token, name))
 	}
 	return template.HTML("")
 }
