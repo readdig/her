@@ -8,7 +8,7 @@ import (
 	"net/http/pprof"
 )
 
-const VERSION = "0.0.1 beta"
+const Version = "0.0.1 beta"
 
 var (
 	watcher        *Watcher
