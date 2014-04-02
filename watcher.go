@@ -52,8 +52,7 @@ func (w *Watcher) Notify() {
 	w.notifyMutex.Lock()
 	defer w.notifyMutex.Unlock()
 
-	for i, watcher := range w.watchers {
-		log.Println(i)
+	for _, watcher := range w.watchers {
 		for {
 			select {
 			case ev := <-watcher.Event:

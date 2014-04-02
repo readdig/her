@@ -17,7 +17,6 @@ func (h *bookHandler) HomeHandler(ctx *her.Context) {
 	books := bookModel.GetAll()
 	tmpl := map[string]interface{}{}
 	tmpl["books"] = books
-
 	ctx.Render("index.html", tmpl)
 }
 

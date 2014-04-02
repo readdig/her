@@ -8,7 +8,10 @@ import (
 	"io"
 )
 
-const tokenName = "_xsrf"
+const (
+	tokenName          = "_xsrf"
+	tokenCookieExpires = 1800
+)
 
 func genToken() string {
 	b := make([]byte, 16)
@@ -21,7 +24,7 @@ func genTokenHTML(ctx *Context) template.HTML {
 	token := ctx.GetToken()
 	xsrfCookie := Config.Bool("XSRFCookies")
 	if token != "" && xsrfCookie {
-		ctx.SetCookie(tokenName, token, 24)
+		ctx.SetCookie(tokenName, token, tokenCookieExpires)
 		return template.HTML(fmt.Sprintf(`<input type="hidden" value="%s" name="%s">`, token, tokenName))
 	}
 	return template.HTML("")

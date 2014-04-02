@@ -94,14 +94,14 @@ func (ctx *Context) ContentType(val string) string {
 	return ctype
 }
 
-// SetHeader sets a response header. If `unique` is true, the current value
-// of that header will be overwritten . If false, it will be appended.
-func (ctx *Context) SetHeader(hdr string, val string, unique bool) {
-	if unique {
-		ctx.Header().Set(hdr, val)
-	} else {
-		ctx.Header().Add(hdr, val)
-	}
+// SetHeader sets a response header.
+func (ctx *Context) SetHeader(hdr string, val string) {
+	ctx.Header().Set(hdr, val)
+}
+
+// AddHeader sets a response header.
+func (ctx *Context) AddHeader(hdr string, val string) {
+	ctx.Header().Add(hdr, val)
 }
 
 // token is xsrf
@@ -110,8 +110,12 @@ func (ctx *Context) GetToken() string {
 }
 
 // SetCookie adds a cookie header to the response.
-func (ctx *Context) SetCookie(name string, value string, age int64) {
+func (ctx *Context) SetCookie(name string, value string, a ...int) {
 	var utctime time.Time
+	var age int64
+	if len(a) > 0 {
+		age = int64(a[0])
+	}
 	if age == 0 {
 		// 2^31 - 1 seconds (roughly 2038)
 		utctime = time.Unix(2147483647, 0)
@@ -119,7 +123,7 @@ func (ctx *Context) SetCookie(name string, value string, age int64) {
 		utctime = time.Unix(time.Now().Unix()+age, 0)
 	}
 	cookie := http.Cookie{Name: name, Value: value, Expires: utctime}
-	ctx.SetHeader("Set-Cookie", cookie.String(), false)
+	ctx.AddHeader("Set-Cookie", cookie.String())
 }
 
 // GetCookie get a cookie header to the response.
@@ -143,7 +147,7 @@ func getCookieSig(key string, val []byte, timestamp string) string {
 	return hex
 }
 
-func (ctx *Context) SetSecureCookie(name string, val string, age int64) {
+func (ctx *Context) SetSecureCookie(name string, val string, a ...int) {
 	cookieSecret := Config.String("CookieSecret")
 	//base64 encode the val
 	if len(cookieSecret) == 0 {
@@ -158,10 +162,10 @@ func (ctx *Context) SetSecureCookie(name string, val string, age int64) {
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 	sig := getCookieSig(cookieSecret, vb, timestamp)
 	cookie := strings.Join([]string{vs, timestamp, sig}, "|")
-	ctx.SetCookie(name, cookie, age)
+	ctx.SetCookie(name, cookie, a...)
 }
 
-func (ctx *Context) GetSecureCookie(name string) (string, bool) {
+func (ctx *Context) GetSecureCookie(name string) string {
 	for _, cookie := range ctx.Request.Cookies() {
 		if cookie.Name != name {
 			continue
@@ -176,28 +180,34 @@ func (ctx *Context) GetSecureCookie(name string) (string, bool) {
 		cookieSecret := Config.String("CookieSecret")
 
 		if getCookieSig(cookieSecret, []byte(val), timestamp) != sig {
-			return "", false
+			return ""
 		}
 
 		ts, _ := strconv.ParseInt(timestamp, 0, 64)
 
 		if time.Now().Unix()-31*86400 > ts {
-			return "", false
+			return ""
 		}
 
 		buf := bytes.NewBufferString(val)
 		encoder := base64.NewDecoder(base64.StdEncoding, buf)
 
 		res, _ := ioutil.ReadAll(encoder)
-		return string(res), true
+		return string(res)
 	}
-	return "", false
+	return ""
 }
 
-func (ctx *Context) Render(tmpl string, data map[string]interface{}) {
+func (ctx *Context) Render(tmpl string, a ...interface{}) {
 	if tmpl != "" {
-		data["xsrf_form_html"] = genTokenHTML(ctx)
-		err := templates.ExecuteTemplate(ctx.ResponseWriter, tmpl, data)
+		tmplData := make(map[string]interface{})
+		if len(a) > 0 {
+			if v, ok := a[0].(map[string]interface{}); ok {
+				tmplData = v
+			}
+		}
+		tmplData["xsrf_form_html"] = genTokenHTML(ctx)
+		err := templates.ExecuteTemplate(ctx.ResponseWriter, tmpl, tmplData)
 		if err != nil {
 			http.Error(ctx.ResponseWriter, err.Error(), http.StatusInternalServerError)
 		}
@@ -207,7 +217,7 @@ func (ctx *Context) Render(tmpl string, data map[string]interface{}) {
 func (ctx *Context) Json(v interface{}) {
 	content, err := json.Marshal(v)
 	if err == nil {
-		ctx.Header().Set("Content-Type", "application/json")
+		ctx.ContentType("application/json")
 		ctx.Write(content)
 	}
 }

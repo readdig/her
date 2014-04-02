@@ -39,7 +39,7 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 	} else if sval.Kind() == reflect.Slice && sval.Type().Elem().Kind() == reflect.Uint8 {
 		content = sval.Interface().([]byte)
 	}
-	ctx.SetHeader("Content-Length", strconv.Itoa(len(content)), true)
+	ctx.SetHeader("Content-Length", strconv.Itoa(len(content)))
 	ctx.Write(content)
 }
 
