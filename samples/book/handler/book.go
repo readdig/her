@@ -38,3 +38,11 @@ func (h *bookHandler) CreateHandler(ctx *her.Context) {
 	tmpl["form"] = form
 	ctx.Render("create.html", tmpl)
 }
+
+func (h *bookHandler) DeleteHandler(ctx *her.Context, id string) {
+	result := bookModel.Delete(id)
+	if result {
+		ctx.Redirect("/")
+	}
+	ctx.Redirect("/")
+}

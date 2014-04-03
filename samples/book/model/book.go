@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/go-code/her"
 )
 
@@ -17,7 +18,7 @@ type Book struct {
 func (b *Book) Insert() bool {
 	db := DB.Open()
 	defer db.Close()
-	sql := "insert into books(username, content) values(?,?)"
+	sql := "INSERT INTO books(username, content) VALUES(?,?)"
 	_, err := db.Exec(sql, b.UserName, b.Content)
 	if err != nil {
 		return false
@@ -44,4 +45,15 @@ func (b *Book) GetAll() []*Book {
 		books = append(books, book)
 	}
 	return books
+}
+
+func (b *Book) Delete(id string) bool {
+	db := DB.Open()
+	defer db.Close()
+	sql := "DELETE FROM books WHERE id = ?"
+	_, err := db.Exec(sql, id)
+	if err != nil {
+		return false
+	}
+	return true
 }
