@@ -55,22 +55,25 @@ func (ctx *Context) RedirectPermanent(url string) {
 // Notmodified writes a 304 HTTP response
 func (ctx *Context) NotModified() {
 	ctx.WriteHeader(304)
+	ctx.Write([]byte(http.StatusText(http.StatusNotModified)))
 }
 
 // NotFound writes a 404 HTTP response
-func (ctx *Context) NotFound(message string) {
+func (ctx *Context) NotFound() {
 	ctx.WriteHeader(404)
-	ctx.Write([]byte(message))
+	ctx.Write([]byte(http.StatusText(http.StatusNotFound)))
 }
 
 //Unauthorized writes a 401 HTTP response
 func (ctx *Context) Unauthorized() {
 	ctx.WriteHeader(401)
+	ctx.Write([]byte(http.StatusText(http.StatusUnauthorized)))
 }
 
 //Forbidden writes a 403 HTTP response
 func (ctx *Context) Forbidden() {
 	ctx.WriteHeader(403)
+	ctx.Write([]byte(http.StatusText(http.StatusForbidden)))
 }
 
 // ContentType sets the Content-Type header for an HTTP response.
@@ -106,7 +109,11 @@ func (ctx *Context) AddHeader(hdr string, val string) {
 
 // token is xsrf
 func (ctx *Context) GetToken() string {
-	return ctx.Token
+	token := ctx.GetCookie(tokenName)
+	if token == "" {
+		token = ctx.Token
+	}
+	return token
 }
 
 // SetCookie adds a cookie header to the response.

@@ -29,3 +29,15 @@ func genTokenHTML(ctx *Context) template.HTML {
 	}
 	return template.HTML("")
 }
+
+func validateToken(ctx *Context) bool {
+	token := ctx.GetToken()
+	tokenXSRF := ctx.Request.FormValue(tokenName)
+	if tokenXSRF == "" {
+		return false
+	}
+	if token != tokenXSRF {
+		return false
+	}
+	return true
+}

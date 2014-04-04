@@ -2,6 +2,7 @@ package her
 
 import (
 	"net/http"
+	"time"
 )
 
 // NewRouter returns a new router instance.
@@ -34,6 +35,9 @@ func (r *Router) Match(req *http.Request, match *RouteMatch) bool {
 // ServeHTTP dispatches the handler registered in the matched route.
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	ctx := Context{Request: req, ResponseWriter: w, Params: map[string]string{}, Token: genToken()}
+	ctx.SetHeader("Server", "her v"+Version)
+	ctx.SetHeader("Date", webTime(time.Now().UTC()))
+
 	// Clean path to canonical form and redirect.
 	if p := cleanPath(req.URL.Path); p != req.URL.Path {
 		ctx.RedirectPermanent(p)
@@ -49,6 +53,14 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
+	xsrfCookie := Config.Bool("XSRFCookies")
+	if ctx.Request.Method == "POST" && xsrfCookie {
+		if !validateToken(&ctx) {
+			ctx.Forbidden()
+			return
+		}
+	}
+
 	var match RouteMatch
 	var handler Handler
 	var vars []string
@@ -57,7 +69,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		vars = match.Vars
 	}
 	if handler == nil {
-		ctx.Abort(404, http.StatusText(http.StatusNotFound))
+		ctx.NotFound()
 		return
 	}
 	routeHandler(&ctx, handler, vars)

@@ -54,11 +54,11 @@ func StaticFileHandler(dir string) Handler {
 		path = fmt.Sprintf("%s/%s", dir, path)
 		info, err := os.Stat(path)
 		if err != nil {
-			ctx.Abort(http.StatusNotFound, http.StatusText(http.StatusNotFound))
+			ctx.NotFound()
 			return
 		}
 		if info.IsDir() {
-			ctx.Abort(http.StatusForbidden, http.StatusText(http.StatusForbidden))
+			ctx.Forbidden()
 			return
 		}
 		http.ServeFile(ctx.ResponseWriter, ctx.Request, path)
