@@ -18,18 +18,14 @@ var (
 )
 
 type Application struct {
-	Route *Router
+	Route    *Router
+	Database *DB
 }
 
 func (app *Application) New(config map[string]interface{}) *Application {
 	Config = LoadConfig(config)
-	application := &Application{Route: newRouter()}
+	application := &Application{Route: newRouter(), Database: NewDB()}
 	return application
-}
-
-func (app *Application) Connection(dsn, conn string) {
-	driverName = dsn
-	dataSourceName = conn
 }
 
 func (app *Application) FuncMap(tmplFunc map[string]interface{}) {

@@ -7,10 +7,33 @@ import (
 
 type DB struct{}
 
-func (d *DB) Open() *sql.DB {
-	db, err := sql.Open(driverName, dataSourceName)
-	if err != nil {
-		log.Fatal(err)
+var Connections map[string]*Connection
+
+type Connection struct {
+	Driver     string
+	DataSource string
+}
+
+func init() {
+	Connections = make(map[string]*Connection)
+}
+
+func NewDB() *DB {
+	return &DB{}
+}
+
+func (d *DB) Connection(key, driver, dataSource string) {
+	Connections[key] = &Connection{Driver: driver, DataSource: dataSource}
+}
+
+func (d *DB) Open(key string) *sql.DB {
+	conn := Connections[key]
+	if conn != nil {
+		DB, err := sql.Open(conn.Driver, conn.DataSource)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return DB
 	}
-	return db
+	return nil
 }

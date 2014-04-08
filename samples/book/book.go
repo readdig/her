@@ -22,7 +22,7 @@ var (
 func main() {
 	app := application.New(config)
 
-	app.Connection("sqlite3", "./book.s3db")
+	app.Database.Connection("sqlite", "sqlite3", "./book.s3db")
 
 	app.Route.Handle("/", handler.Book.HomeHandler)
 	app.Route.Handle("/create", handler.Book.CreateHandler)
