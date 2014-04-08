@@ -11,13 +11,9 @@ import (
 )
 
 var (
-	funcMap   template.FuncMap
+	funcMap   = make(template.FuncMap)
 	templates *template.Template
 )
-
-func init() {
-	funcMap = make(template.FuncMap)
-}
 
 func loadTemplate() *template.Template {
 	templatePath := Config.String("TemplatePath")

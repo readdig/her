@@ -7,15 +7,11 @@ import (
 
 type DB struct{}
 
-var Connections map[string]*Connection
+var Connections = make(map[string]*Connection)
 
 type Connection struct {
 	Driver     string
 	DataSource string
-}
-
-func init() {
-	Connections = make(map[string]*Connection)
 }
 
 func NewDB() *DB {
