@@ -10,10 +10,25 @@ import (
 	"time"
 )
 
+type TemplateFunc struct {
+}
+
 var (
 	funcMap   = make(template.FuncMap)
 	templates *template.Template
 )
+
+func newTemplateFunc() *TemplateFunc {
+	return &TemplateFunc{}
+}
+
+func (t *TemplateFunc) FuncMap(tmplFunc map[string]interface{}) {
+	if len(tmplFunc) > 0 {
+		for k, v := range tmplFunc {
+			funcMap[k] = v
+		}
+	}
+}
 
 func loadTemplate() *template.Template {
 	templatePath := Config.String("TemplatePath")

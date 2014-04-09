@@ -4,12 +4,8 @@ import (
 	"github.com/go-code/her"
 )
 
-var (
-	application = &her.Application{}
-)
-
 func main() {
-	app := application.New(nil)
+	app := her.NewApplication()
 	app.Route.Handle("/", func() string {
 		return "hello world!"
 	})

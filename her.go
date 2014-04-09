@@ -11,29 +11,30 @@ import (
 const Version = "0.0.1 beta"
 
 var (
-	watcher        *Watcher
-	Config         *MergedConfig
-	driverName     string
-	dataSourceName string
+	watcher *Watcher
+	Config  *MergedConfig
 )
 
 type Application struct {
 	Route    *Router
 	Database *DB
+	Template *TemplateFunc
 }
 
-func (app *Application) New(config map[string]interface{}) *Application {
-	Config = LoadConfig(config)
-	application := &Application{Route: newRouter(), Database: NewDB()}
-	return application
-}
-
-func (app *Application) FuncMap(tmplFunc map[string]interface{}) {
-	if len(tmplFunc) > 0 {
-		for k, v := range tmplFunc {
-			funcMap[k] = v
+func NewApplication(a ...interface{}) *Application {
+	config := make(map[string]interface{})
+	if len(a) > 0 {
+		if v, ok := a[0].(map[string]interface{}); ok {
+			config = v
 		}
 	}
+	Config = loadConfig(config)
+	application := &Application{
+		Route:    newRouter(),
+		Database: newDB(),
+		Template: newTemplateFunc(),
+	}
+	return application
 }
 
 func (app *Application) Start() {

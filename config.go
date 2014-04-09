@@ -4,7 +4,7 @@ type MergedConfig struct {
 	config map[string]interface{}
 }
 
-func LoadConfig(conf map[string]interface{}) *MergedConfig {
+func loadConfig(conf map[string]interface{}) *MergedConfig {
 	return &MergedConfig{config: conf}
 }
 

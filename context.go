@@ -216,7 +216,7 @@ func (ctx *Context) Render(tmpl string, a ...interface{}) {
 		tmplData["xsrf_form_html"] = genTokenHTML(ctx)
 		err := templates.ExecuteTemplate(ctx.ResponseWriter, tmpl, tmplData)
 		if err != nil {
-			http.Error(ctx.ResponseWriter, err.Error(), http.StatusInternalServerError)
+			ctx.Abort(http.StatusInternalServerError, err.Error())
 		}
 	}
 }

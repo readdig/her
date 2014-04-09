@@ -16,11 +16,10 @@ var (
 		"Port":         8080,
 		"Debug":        true,
 	}
-	application = &her.Application{}
 )
 
 func main() {
-	app := application.New(config)
+	app := her.NewApplication(config)
 
 	app.Database.Connection("sqlite", "sqlite3", "./book.s3db")
 
