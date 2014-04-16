@@ -53,10 +53,14 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	xsrfCookie := Config.Bool("XSRFCookies")
-	if ctx.Request.Method == "POST" && xsrfCookie {
+	token := Config.Bool("XSRFCookies")
+	if ctx.Request.Method == "POST" {
+		if !token {
+			ctx.Abort(403, "'_xsrf' argument missing from POST")
+			return
+		}
 		if !validateToken(&ctx) {
-			ctx.Forbidden()
+			ctx.Abort(403, "XSRF cookie does not match POST argument")
 			return
 		}
 	}

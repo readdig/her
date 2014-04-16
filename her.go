@@ -31,7 +31,7 @@ func NewApplication(a ...interface{}) *Application {
 	Config = loadConfig(config)
 	application := &Application{
 		Route:    newRouter(),
-		Database: newDB(),
+		Database: NewDB(),
 		Template: newTemplateFunc(),
 	}
 	return application

@@ -8,11 +8,7 @@
 
 <div class="list-group">
   {{range .books}} 
-  <a href="/del/{{.Id}}" class="btn btn-danger btn-xs" style="margin-bottom: 5px;">删除</a>
-  <a href="javascript:;" class="list-group-item">
-    <h4 class="list-group-item-heading">{{.UserName}}</h4>
-    <p class="list-group-item-text">{{nl2br .Content}}</p>
-  </a>
+  <div class="list-group-item"><strong>{{.UserName}}: </strong>{{nl2br .Content}} <a href="/del/{{.Id}}" class="btn btn-danger btn-xs">删除</a></div>
   {{end}}
 </div>
 

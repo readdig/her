@@ -14,7 +14,7 @@ type Connection struct {
 	DataSource string
 }
 
-func newDB() *DB {
+func NewDB() *DB {
 	return &DB{}
 }
 
