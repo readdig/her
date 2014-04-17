@@ -43,6 +43,8 @@ func (h *bookHandler) DeleteHandler(ctx *her.Context, id string) {
 	result := bookModel.Delete(id)
 	if result {
 		ctx.Redirect("/")
+		return
 	}
 	ctx.Redirect("/")
+	return
 }
