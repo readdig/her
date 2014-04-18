@@ -16,17 +16,23 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 		panic("handler must be a callable func")
 	}
 
-	var in = make([]reflect.Value, handlerType.NumIn())
+	isContext := false
+	in := make([]reflect.Value, handlerType.NumIn())
 	for i := 0; i < handlerType.NumIn(); i++ {
 		argType := handlerType.In(i)
-		if i == 0 {
-			if argType.Kind() == reflect.Ptr {
-				if argType.Elem().Name() == "Context" {
-					in[i] = reflect.ValueOf(ctx)
-				}
+
+		if argType.Kind() == reflect.Ptr {
+			if i == 0 && argType.Elem().Name() == "Context" {
+				in[i] = reflect.ValueOf(ctx)
+				isContext = true
+				continue
 			}
+		}
+
+		if isContext {
+			in[i] = reflect.ValueOf(vars[1:][i-1])
 		} else {
-			in[i] = reflect.ValueOf(vars[i])
+			in[i] = reflect.ValueOf(vars[1:][i])
 		}
 	}
 
@@ -44,41 +50,6 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 	ctx.SetHeader("Content-Length", strconv.Itoa(len(content)))
 	ctx.Write(content)
 }
-
-// func routeHandler(ctx *Context, handler Handler, vars []string) {
-// 	handlerType := reflect.TypeOf(handler)
-// 	if handlerType.Kind() != reflect.Func {
-// 		panic("handler must be a callable func")
-// 	}
-
-// 	var in []reflect.Value
-// 	if handlerType.NumIn() > 0 {
-// 		argType := handlerType.In(0)
-// 		if argType.Kind() == reflect.Ptr {
-// 			if argType.Elem().Name() == "Context" {
-// 				in = append(in, reflect.ValueOf(ctx))
-// 			}
-// 		}
-// 		for _, arg := range vars[1:] {
-// 			val := reflect.ValueOf(arg)
-// 			in = append(in, val)
-// 		}
-// 	}
-
-// 	ret := reflect.ValueOf(handler).Call(in)
-// 	if len(ret) == 0 {
-// 		return
-// 	}
-// 	sval := ret[0]
-// 	var content []byte
-// 	if sval.Kind() == reflect.String {
-// 		content = []byte(sval.String())
-// 	} else if sval.Kind() == reflect.Slice && sval.Type().Elem().Kind() == reflect.Uint8 {
-// 		content = sval.Interface().([]byte)
-// 	}
-// 	ctx.SetHeader("Content-Length", strconv.Itoa(len(content)))
-// 	ctx.Write(content)
-// }
 
 func redirectHandler(url string, code int) Handler {
 	return func(ctx *Context) {
