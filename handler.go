@@ -28,11 +28,12 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 				continue
 			}
 		}
-
-		if isContext {
-			in[i] = reflect.ValueOf(vars[1:][i-1])
-		} else {
-			in[i] = reflect.ValueOf(vars[1:][i])
+		if i <= len(vars) {
+			if isContext {
+				in[i] = reflect.ValueOf(vars[1:][i-1])
+			} else {
+				in[i] = reflect.ValueOf(vars[1:][i])
+			}
 		}
 	}
 

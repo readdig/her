@@ -15,5 +15,9 @@ func main() {
 	app.Route.Handle("/hi/{val}", func(ctx *her.Context, val string) {
 		ctx.WriteString("hi " + val)
 	})
+
+	app.Route.Handle("/par/{val}", func(ctx *her.Context) {
+		ctx.WriteString("par: " + ctx.Params["val"])
+	})
 	app.Start()
 }

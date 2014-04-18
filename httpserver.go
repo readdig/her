@@ -71,6 +71,10 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if r.Match(req, &match) {
 		handler = match.Handler
 		vars = match.Vars
+
+		for k, v := range match.Params {
+			ctx.Params[k] = v
+		}
 	}
 	if handler == nil {
 		ctx.NotFound()
@@ -197,4 +201,5 @@ type RouteMatch struct {
 	Route   *Route
 	Handler Handler
 	Vars    []string
+	Params  map[string]string
 }

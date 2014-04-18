@@ -93,6 +93,10 @@ app.Route.Handle("/", func(ctx *her.Context) {
 app.Route.Handle("/{val}", func(ctx *her.Context, val string) {
     ctx.WriteString("hello world!")
 })
+
+app.Route.Handle("/par/{val}", func(ctx *her.Context) {
+    ctx.WriteString("par: " + ctx.Params["val"])
+})
 ```
 
 #### Static file handler
