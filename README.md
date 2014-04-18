@@ -122,6 +122,58 @@ app.Template.FuncMap(map[string]interface{}{
 {{text "her"}}
 ```
 
+#### Form and Validator
+```go
+package form
+
+import (
+    "github.com/go-code/her"
+)
+
+// form field
+type BookForm struct {
+    Form     *her.Form
+    UserName *her.TextField
+    Content  *her.TextAreaField
+}
+
+// new form and field validetor
+func NewBookForm(ctx *her.Context) *BookForm {
+    form := &BookForm{}
+    form.UserName = her.NewTextField("username", "用户名", "", her.Required{}, her.Length{Min: 3, Max: 10})
+    form.Content = her.NewTextAreaField("content", "内容", "", her.Required{}, her.Length{Min: 1, Max: 200})
+
+    form.Form = her.InitForm(ctx, form)
+    return form
+}
+```
+
+```go
+// use
+form := form.NewBookForm(ctx)
+tmpl := map[string]interface{}{}
+tmpl["form"] = form
+ctx.Render("create.html", tmpl)
+
+// template
+{{.form.UserName.Text}}
+{{.form.UserName.Render `class="form-control"` `placeholder="用户名"`}}
+
+{{.form.Content.Text}}
+{{.form.Content.Render `class="form-control"` `placeholder="需要发布的内容"` `rows="5"`}}
+
+{{.form.Form.ValidatorSummary}} // error msg
+```
+
+```go 
+// validetor
+if ctx.Request.Method == "POST" {
+    if form.Form.Validate() {
+        // form.UserName.Value() form field value
+    }
+}
+```
+
 ### 参考、使用项目
 - gorilla [mux](https://github.com/gorilla/mux) 路由
 - jimmykuu [wtforms](https://github.com/jimmykuu/wtforms) 表单
