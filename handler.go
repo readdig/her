@@ -17,6 +17,8 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 	}
 
 	isContext := false
+	var val reflect.Value
+
 	in := make([]reflect.Value, handlerType.NumIn())
 	for i := 0; i < handlerType.NumIn(); i++ {
 		argType := handlerType.In(i)
@@ -30,10 +32,20 @@ func routeHandler(ctx *Context, handler Handler, vars []string) {
 		}
 		if i <= len(vars) {
 			if isContext {
-				in[i] = reflect.ValueOf(vars[1:][i-1])
+				val = reflect.ValueOf(vars[1:][i-1])
 			} else {
-				in[i] = reflect.ValueOf(vars[1:][i])
+				val = reflect.ValueOf(vars[1:][i])
 			}
+
+			if argType.Kind() == reflect.Int {
+				v, err := strconv.Atoi(val.String())
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				val = reflect.ValueOf(v)
+			}
+			in[i] = val
 		}
 	}
 

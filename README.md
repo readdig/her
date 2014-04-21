@@ -84,8 +84,12 @@ app.Route.Handle("/", func(ctx *her.Context) {
     ctx.WriteString("hello world!")
 })
 
-app.Route.Handle("/{val}", func(ctx *her.Context, val string) {
-    ctx.WriteString("hello world!")
+app.Route.Handle("/str/{val}", func(ctx *her.Context, val string) {
+    ctx.WriteString("str: " + val)
+})
+
+app.Route.Handle("/int/{val}", func(ctx *her.Context, val int) {
+    ctx.WriteString("int: " + strconv.Itoa(val))
 })
 
 app.Route.Handle("/par/{val}", func(ctx *her.Context) {

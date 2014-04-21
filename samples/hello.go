@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/go-code/her"
+	"strconv"
 )
 
 func main() {
@@ -12,8 +13,8 @@ func main() {
 	app.Route.Handle("/hello/{val}", func(val string) string {
 		return "hello " + val
 	})
-	app.Route.Handle("/hi/{val}", func(ctx *her.Context, val string) {
-		ctx.WriteString("hi " + val)
+	app.Route.Handle("/hi/{val}", func(ctx *her.Context, val int) {
+		ctx.WriteString("hi " + strconv.Itoa(val))
 	})
 
 	app.Route.Handle("/par/{val}", func(ctx *her.Context) {
