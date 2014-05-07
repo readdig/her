@@ -1,3 +1,8 @@
+// Copyright 2012 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// Package fsnotify implements file system notification.
 package notify
 
 import "fmt"
@@ -15,7 +20,9 @@ const (
 func (w *Watcher) purgeEvents() {
 	for ev := range w.internalEvent {
 		sendEvent := false
+		w.fsnmut.Lock()
 		fsnFlags := w.fsnFlags[ev.Name]
+		w.fsnmut.Unlock()
 
 		if (fsnFlags&FSN_CREATE == FSN_CREATE) && ev.IsCreate() {
 			sendEvent = true
@@ -30,12 +37,20 @@ func (w *Watcher) purgeEvents() {
 		}
 
 		if (fsnFlags&FSN_RENAME == FSN_RENAME) && ev.IsRename() {
-			//w.RemoveWatch(ev.Name)
 			sendEvent = true
 		}
 
 		if sendEvent {
 			w.Event <- ev
+		}
+
+		// If there's no file, then no more events for user
+		// BSD must keep watch for internal use (watches DELETEs to keep track
+		// what files exist for create events)
+		if ev.IsDelete() {
+			w.fsnmut.Lock()
+			delete(w.fsnFlags, ev.Name)
+			w.fsnmut.Unlock()
 		}
 	}
 
@@ -44,19 +59,25 @@ func (w *Watcher) purgeEvents() {
 
 // Watch a given file path
 func (w *Watcher) Watch(path string) error {
+	w.fsnmut.Lock()
 	w.fsnFlags[path] = FSN_ALL
+	w.fsnmut.Unlock()
 	return w.watch(path)
 }
 
 // Watch a given file path for a particular set of notifications (FSN_MODIFY etc.)
 func (w *Watcher) WatchFlags(path string, flags uint32) error {
+	w.fsnmut.Lock()
 	w.fsnFlags[path] = flags
+	w.fsnmut.Unlock()
 	return w.watch(path)
 }
 
 // Remove a watch on a file
 func (w *Watcher) RemoveWatch(path string) error {
+	w.fsnmut.Lock()
 	delete(w.fsnFlags, path)
+	w.fsnmut.Unlock()
 	return w.removeWatch(path)
 }
 
@@ -79,6 +100,10 @@ func (e *FileEvent) String() string {
 
 	if e.IsRename() {
 		events += "|" + "RENAME"
+	}
+
+	if e.IsAttrib() {
+		events += "|" + "ATTRIB"
 	}
 
 	if len(events) > 0 {

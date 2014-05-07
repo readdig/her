@@ -181,7 +181,7 @@ if ctx.Request.Method == "POST" {
 ### 参考、使用项目
 - gorilla [mux](https://github.com/gorilla/mux) 路由
 - jimmykuu [wtforms](https://github.com/jimmykuu/wtforms) 表单
-- fsnotify [fsnotify](https://github.com/robfig/fsnotify) 模版刷新
+- fsnotify [fsnotify](https://github.com/howeyc/fsnotify) 模版刷新
 
 ### 开发成员
 John, Monkey
