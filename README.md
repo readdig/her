@@ -109,8 +109,8 @@ import _ "github.com/mattn/go-sqlite3"
 // config
 app.Database.Connection("sqlite", "sqlite3", "./book.s3db") // key, driver, data source
 // use
-DB = her.NewDB()
-db := DB.Open("sqlite")
+DB = her.NewDB("sqlite")
+db := DB.Open()
 defer db.Close()
 // sql code
 ```

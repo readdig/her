@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	DB = her.NewDB()
+	DB = her.NewDB("sqlite")
 )
 
 type Book struct {
@@ -15,7 +15,7 @@ type Book struct {
 }
 
 func (b *Book) Insert() bool {
-	db := DB.Open("sqlite")
+	db := DB.Open()
 	defer db.Close()
 	sql := "INSERT INTO books(username, content) VALUES(?,?)"
 	_, err := db.Exec(sql, b.UserName, b.Content)
@@ -27,7 +27,7 @@ func (b *Book) Insert() bool {
 
 func (b *Book) GetAll() []*Book {
 	books := make([]*Book, 0)
-	db := DB.Open("sqlite")
+	db := DB.Open()
 	defer db.Close()
 	sql := "SELECT id,username,content FROM books"
 	rows, err := db.Query(sql)
@@ -47,7 +47,7 @@ func (b *Book) GetAll() []*Book {
 }
 
 func (b *Book) Delete(id string) bool {
-	db := DB.Open("sqlite")
+	db := DB.Open()
 	defer db.Close()
 	sql := "DELETE FROM books WHERE id = ?"
 	_, err := db.Exec(sql, id)
