@@ -39,7 +39,6 @@ func (w *Watcher) Listen(p string) {
 				if err != nil {
 					log.Println("Failed to watch", path, ":", err)
 				}
-				log.Println("Watching:", path)
 			}
 			return nil
 		})
