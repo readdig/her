@@ -33,7 +33,7 @@ func (t *TemplateFunc) FuncMap(tmplFunc map[string]interface{}) {
 func loadTemplate() *template.Template {
 	templatePath := Config.String("TemplatePath")
 	if templatePath == "" {
-		return nil
+		templatePath = "view"
 	}
 	for k, v := range templateFuncMap() {
 		funcMap[k] = v
