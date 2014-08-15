@@ -76,7 +76,7 @@ func templateFuncMap() template.FuncMap {
 func buildTemplate(dir string, funcMap template.FuncMap) (*template.Template, error) {
 	var t *template.Template
 	return t, filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
+		if info != nil && !info.IsDir() {
 			filetext, err := ioutil.ReadFile(path)
 			if err != nil {
 				return err
