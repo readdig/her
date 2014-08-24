@@ -39,13 +39,7 @@ func NewApplication(a ...interface{}) *Application {
 
 func (app *Application) Start() {
 	address := Config.String("Address")
-	if address == "" {
-		address = "0.0.0.0"
-	}
 	port := Config.Int("Port")
-	if port == 0 {
-		port = 8080
-	}
 	debug := Config.Bool("Debug")
 	tmplPath := Config.String("TemplatePath")
 	listen := fmt.Sprintf("%s:%d", address, port)

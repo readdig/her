@@ -5,7 +5,27 @@ type MergedConfig struct {
 }
 
 func loadConfig(conf map[string]interface{}) *MergedConfig {
-	return &MergedConfig{config: conf}
+	mergedConfig := &MergedConfig{}
+
+	if mergedConfig.String("Address") == "" {
+		conf["Address"] = "0.0.0.0"
+	}
+
+	if mergedConfig.Int("Port") == 0 {
+		conf["Port"] = 8080
+	}
+
+	if mergedConfig.String("TemplatePath") == "" {
+		conf["TemplatePath"] = "view"
+	}
+
+	if mergedConfig.String("CookieSecret") == "" {
+		conf["CookieSecret"] = "kN)A/hJ]ZsmHk#5'=Q'88zv6]vqfzS"
+	}
+
+	mergedConfig.config = conf
+
+	return mergedConfig
 }
 
 func (c *MergedConfig) String(key string) string {

@@ -7,7 +7,7 @@ a web framework for golang
 
 * 路由/RESTFUL(route)
 * 控制器(handler)
-* 视图(templates)
+* 视图(view)
 * 表单(form)
 * 静态文件(static)
 * 数据库(database)
@@ -48,11 +48,11 @@ app.Start()
 #### Config
 ```go
 app := her.NewApplication(map[string]interface{}{
-        "TemplatePath": "templates",
-        "Address":      "0.0.0.0",
-        "XSRFCookies":  true,
+        "TemplatePath": "view",
         "CookieSecret": "book_secert",
+        "Address":      "0.0.0.0",
         "Port":         8080,
+        "XSRFCookies":  true,
         "Debug":        true,
     })
 ```

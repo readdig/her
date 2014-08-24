@@ -9,11 +9,11 @@ import (
 
 var (
 	config = map[string]interface{}{
-		"TemplatePath": "templates",
+		"TemplatePath": "view",
 		"Address":      "0.0.0.0",
-		"XSRFCookies":  true,
-		"CookieSecret": "book_secert",
 		"Port":         8080,
+		"CookieSecret": "book_secert",
+		"XSRFCookies":  true,
 		"Debug":        true,
 	}
 )

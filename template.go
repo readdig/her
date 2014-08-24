@@ -31,13 +31,11 @@ func (t *TemplateFunc) FuncMap(tmplFunc map[string]interface{}) {
 }
 
 func loadTemplate() *template.Template {
-	templatePath := Config.String("TemplatePath")
-	if templatePath == "" {
-		templatePath = "view"
-	}
 	for k, v := range templateFuncMap() {
 		funcMap[k] = v
 	}
+
+	templatePath := Config.String("TemplatePath")
 	t, err := buildTemplate(templatePath, funcMap)
 	if err != nil {
 		log.Printf("Can't read template file %v,", err)
