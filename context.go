@@ -6,6 +6,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"mime"
@@ -24,7 +25,7 @@ type Context struct {
 
 // WriteString writes string data into the response object.
 func (ctx *Context) WriteString(content string) {
-	ctx.ContentType("text/plain; charset=utf-8")
+	ctx.ContentType("text/plain; charset=UTF-8")
 	ctx.Write([]byte(content))
 }
 func (ctx *Context) Status(status int) {
@@ -225,7 +226,19 @@ func (ctx *Context) Render(tmpl string, a ...interface{}) {
 func (ctx *Context) Json(v interface{}) {
 	content, err := json.Marshal(v)
 	if err == nil {
-		ctx.ContentType("application/json; charset=utf-8")
+		ctx.ContentType("application/json; charset=UTF-8")
 		ctx.Write(content)
+	} else {
+		ctx.Abort(http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (ctx *Context) Xml(v interface{}) {
+	content, err := xml.Marshal(v)
+	if err == nil {
+		ctx.ContentType("application/xml; charset=UTF-8")
+		ctx.Write(content)
+	} else {
+		ctx.Abort(http.StatusInternalServerError, err.Error())
 	}
 }

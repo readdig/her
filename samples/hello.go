@@ -5,6 +5,11 @@ import (
 	"strconv"
 )
 
+type Info struct {
+	Name        string
+	Description string
+}
+
 func main() {
 	app := her.NewApplication()
 	app.Route.Handle("/", func() string {
@@ -20,5 +25,16 @@ func main() {
 	app.Route.Handle("/par/{val}", func(ctx *her.Context) {
 		ctx.WriteString("par: " + ctx.Params["val"])
 	})
+
+	app.Route.Handle("/api/her.xml", func(ctx *her.Context) {
+		info := &Info{Name: "her", Description: "a web framework for golang"}
+		ctx.Xml(info)
+	})
+
+	app.Route.Handle("/api/her.json", func(ctx *her.Context) {
+		info := &Info{Name: "her", Description: "a web framework for golang"}
+		ctx.Json(info)
+	})
+
 	app.Start()
 }
