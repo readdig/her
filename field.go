@@ -17,7 +17,7 @@ type Field interface {
 	HasErrors() bool
 	AddError(err string)
 	Errors() []string
-	ValidatorMessage() template.HTML
+	ValidatorMessage(attrs ...string) template.HTML
 }
 
 type BaseField struct {
@@ -56,10 +56,10 @@ func (field *BaseField) Errors() []string {
 	return field.errors
 }
 
-func (field *BaseField) ValidatorMessage() template.HTML {
+func (field *BaseField) ValidatorMessage(attrs ...string) template.HTML {
 	result := ""
 	for _, err := range field.errors {
-		result += fmt.Sprintf(`<span class="validator-error">%s %s</span>`, field.Text(), err)
+		result += fmt.Sprintf(`<span %s>%s %s</span>`, strings.Join(attrs, " "), field.Text(), err)
 	}
 
 	return template.HTML(result)

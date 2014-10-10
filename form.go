@@ -51,7 +51,7 @@ func (form *Form) Errors() []string {
 	return errors
 }
 
-func (form *Form) ValidatorSummary() template.HTML {
+func (form *Form) ValidatorSummary(attrs ...string) template.HTML {
 	result := ""
 	for _, field := range form.fields {
 		for _, err := range field.Errors() {
@@ -60,7 +60,7 @@ func (form *Form) ValidatorSummary() template.HTML {
 	}
 
 	if result != "" {
-		ul := fmt.Sprintf(`<ul class="validator-summary">%s</ul>`, result)
+		ul := fmt.Sprintf(`<ul %s>%s</ul>`, strings.Join(attrs, " "), result)
 		return template.HTML(ul)
 	}
 
