@@ -7,6 +7,7 @@ a web framework for golang
 
 * 路由/RESTFUL(route)
 * 控制器(handler)
+* 模型(model)
 * 视图(view)
 * 表单(form)
 * 静态文件(static)
