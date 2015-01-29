@@ -57,6 +57,17 @@ app := her.NewApplication(map[string]interface{}{
         "Debug":        true,
     })
 ```
+or config.json
+
+```json
+{  
+   "Address": "127.0.0.1",
+   "Port": 8080,
+   "CookieSecret": "Rr3ItbiN+]3Yb_F/xu|rMg.QATsUetvR6+Y-L%pz!+m((/S:*!4:2#L1uu-_z5F",
+   "XSRFCookies": true,
+   "Debug": true
+}
+```
 
 #### Route ([mux](http://www.gorillatoolkit.org/pkg/mux))
 ```go

@@ -7,19 +7,8 @@ import (
 	"github.com/go-code/her/samples/book/handler"
 )
 
-var (
-	config = map[string]interface{}{
-		"TemplatePath": "view",
-		"Address":      "0.0.0.0",
-		"Port":         8080,
-		"CookieSecret": "book_secert",
-		"XSRFCookies":  true,
-		"Debug":        true,
-	}
-)
-
 func main() {
-	app := her.NewApplication(config)
+	app := her.NewApplication()
 
 	app.Database.Connection("sqlite", "sqlite3", "./book.s3db")
 

@@ -3,6 +3,7 @@ package her
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 	"time"
@@ -100,4 +101,11 @@ func webTime(t time.Time) string {
 		ftime = ftime[0:len(ftime)-3] + "GMT"
 	}
 	return ftime
+}
+
+func pathExist(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }

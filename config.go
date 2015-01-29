@@ -1,31 +1,70 @@
 package her
 
+import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+)
+
 type MergedConfig struct {
 	config map[string]interface{}
 }
 
-func loadConfig(conf map[string]interface{}) *MergedConfig {
-	mergedConfig := &MergedConfig{}
+func loadConfig(a ...interface{}) *MergedConfig {
+	config := make(map[string]interface{})
+
+	if len(a) > 0 {
+		switch conf := a[0].(type) {
+		case map[string]interface{}:
+			config = conf
+		case string:
+			config = loadConfigJSON(conf)
+		}
+	} else {
+		config = loadConfigJSON("config.json")
+	}
+
+	mergedConfig := &MergedConfig{config: config}
 
 	if mergedConfig.String("Address") == "" {
-		conf["Address"] = "0.0.0.0"
+		mergedConfig.config["Address"] = "0.0.0.0"
 	}
 
 	if mergedConfig.Int("Port") == 0 {
-		conf["Port"] = 8080
+		mergedConfig.config["Port"] = 8080
 	}
 
 	if mergedConfig.String("TemplatePath") == "" {
-		conf["TemplatePath"] = "view"
+		mergedConfig.config["TemplatePath"] = "view"
 	}
 
 	if mergedConfig.String("CookieSecret") == "" {
-		conf["CookieSecret"] = "kN)A/hJ]ZsmHk#5'=Q'88zv6]vqfzS"
+		mergedConfig.config["CookieSecret"] = "kN)A/hJ]ZsmHk#5'=Q'88zv6]vqfzS"
 	}
 
-	mergedConfig.config = conf
-
 	return mergedConfig
+}
+
+func loadConfigJSON(filename string) map[string]interface{} {
+	var conf map[string]interface{}
+
+	if pathExist(filename) {
+		bytes, err := ioutil.ReadFile(filename)
+
+		if err != nil {
+			log.Println(err.Error())
+			return nil
+		}
+
+		if err := json.Unmarshal(bytes, &conf); err != nil {
+			log.Println(err.Error())
+			return nil
+		}
+	} else {
+		conf = make(map[string]interface{})
+	}
+
+	return conf
 }
 
 func (c *MergedConfig) String(key string) string {

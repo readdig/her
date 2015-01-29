@@ -22,13 +22,8 @@ type Application struct {
 }
 
 func NewApplication(a ...interface{}) *Application {
-	config := make(map[string]interface{})
-	if len(a) > 0 {
-		if v, ok := a[0].(map[string]interface{}); ok {
-			config = v
-		}
-	}
-	Config = loadConfig(config)
+	Config = loadConfig(a...)
+
 	application := &Application{
 		Route:    newRouter(),
 		Database: NewDB(),
