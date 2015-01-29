@@ -19,6 +19,7 @@ type Application struct {
 	Route    *Router
 	Database *DB
 	Template *TemplateFunc
+	Config   *MergedConfig
 }
 
 func NewApplication(a ...interface{}) *Application {
@@ -28,6 +29,7 @@ func NewApplication(a ...interface{}) *Application {
 		Route:    newRouter(),
 		Database: NewDB(),
 		Template: newTemplateFunc(),
+		Config:   Config,
 	}
 	return application
 }
