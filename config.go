@@ -26,19 +26,19 @@ func loadConfig(a ...interface{}) *MergedConfig {
 
 	mergedConfig := &MergedConfig{config: config}
 
-	if mergedConfig.String("Address") == "" {
+	if mergedConfig.GetString("Address") == "" {
 		mergedConfig.config["Address"] = "0.0.0.0"
 	}
 
-	if mergedConfig.Int("Port") == 0 {
+	if mergedConfig.GetInt("Port") == 0 {
 		mergedConfig.config["Port"] = 8080
 	}
 
-	if mergedConfig.String("TemplatePath") == "" {
+	if mergedConfig.GetString("TemplatePath") == "" {
 		mergedConfig.config["TemplatePath"] = "view"
 	}
 
-	if mergedConfig.String("CookieSecret") == "" {
+	if mergedConfig.GetString("CookieSecret") == "" {
 		mergedConfig.config["CookieSecret"] = "kN)A/hJ]ZsmHk#5'=Q'88zv6]vqfzS"
 	}
 
@@ -67,42 +67,42 @@ func loadConfigJSON(filename string) map[string]interface{} {
 	return conf
 }
 
-func (c *MergedConfig) String(key string) string {
-	val, ok := c.config[key].(string)
+func (c *MergedConfig) GetString(key string) string {
+	val, ok := c.config[key]
 	if !ok {
 		return ""
 	}
-	return val
+	return val.(string)
 }
 
-func (c *MergedConfig) Int(key string) int {
-	val, ok := c.config[key].(int)
+func (c *MergedConfig) GetInt(key string) int {
+	val, ok := c.config[key]
 	if !ok {
-		return 0
+		return -1
 	}
-	return val
+	return int(val.(float64))
 }
 
-func (c *MergedConfig) Int64(key string) int64 {
-	val, ok := c.config[key].(int64)
-	if !ok {
-		return 0
-	}
-	return val
-}
-
-func (c *MergedConfig) Bool(key string) bool {
-	val, ok := c.config[key].(bool)
+func (c *MergedConfig) GetBool(key string) bool {
+	val, ok := c.config[key]
 	if !ok {
 		return false
 	}
-	return val
+	return val.(bool)
 }
 
-func (c *MergedConfig) Float(key string) float64 {
-	val, ok := c.config[key].(float64)
+func (c *MergedConfig) GetFloat(key string) float64 {
+	val, ok := c.config[key]
 	if !ok {
-		return 0.0
+		return -1
 	}
-	return val
+	return val.(float64)
+}
+
+func (c *MergedConfig) GetArray(key string) []interface{} {
+	val, ok := c.config[key]
+	if !ok {
+		return []interface{}(nil)
+	}
+	return val.([]interface{})
 }

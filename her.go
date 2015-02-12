@@ -33,10 +33,10 @@ func NewApplication(a ...interface{}) *Application {
 }
 
 func (app *Application) Start() {
-	address := Config.String("Address")
-	port := Config.Int("Port")
-	debug := Config.Bool("Debug")
-	tmplPath := Config.String("TemplatePath")
+	address := Config.GetString("Address")
+	port := Config.GetInt("Port")
+	debug := Config.GetBool("Debug")
+	tmplPath := Config.GetString("TemplatePath")
 	listen := fmt.Sprintf("%s:%d", address, port)
 
 	templates = loadTemplate()

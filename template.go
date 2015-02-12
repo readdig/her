@@ -35,7 +35,7 @@ func loadTemplate() *template.Template {
 		funcMap[k] = v
 	}
 
-	templatePath := Config.String("TemplatePath")
+	templatePath := Config.GetString("TemplatePath")
 	t, err := buildTemplate(templatePath, funcMap)
 	if err != nil {
 		log.Printf("Can't read template file %v,", err)

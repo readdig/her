@@ -68,6 +68,11 @@ or config.json
    "Debug": true
 }
 ```
+get config
+
+```go
+Address := her.Config.GetString("Address")
+```
 
 #### Route ([mux](http://www.gorillatoolkit.org/pkg/mux))
 ```go

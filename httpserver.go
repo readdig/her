@@ -53,7 +53,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	token := Config.Bool("XSRFCookies")
+	token := Config.GetBool("XSRFCookies")
 	if token {
 		if ctx.Request.Method == "POST" {
 			if !validateToken(&ctx) {

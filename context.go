@@ -157,7 +157,7 @@ func getCookieSig(key string, val []byte, timestamp string) string {
 }
 
 func (ctx *Context) SetSecureCookie(name string, val string, a ...int) {
-	cookieSecret := Config.String("CookieSecret")
+	cookieSecret := Config.GetString("CookieSecret")
 	//base64 encode the val
 	if len(cookieSecret) == 0 {
 		return
@@ -186,7 +186,7 @@ func (ctx *Context) GetSecureCookie(name string) string {
 		timestamp := parts[1]
 		sig := parts[2]
 
-		cookieSecret := Config.String("CookieSecret")
+		cookieSecret := Config.GetString("CookieSecret")
 
 		if getCookieSig(cookieSecret, []byte(val), timestamp) != sig {
 			return ""
