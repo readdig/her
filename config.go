@@ -99,6 +99,14 @@ func (c *MergedConfig) GetFloat(key string) float64 {
 	return val.(float64)
 }
 
+func (c *MergedConfig) GetMap(key string) map[string]interface{} {
+	val, ok := c.config[key]
+	if !ok {
+		return nil
+	}
+	return val.(map[string]interface{})
+}
+
 func (c *MergedConfig) GetArray(key string) []interface{} {
 	val, ok := c.config[key]
 	if !ok {
