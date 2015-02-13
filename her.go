@@ -62,6 +62,6 @@ func (app *Application) Start() {
 		log.Fatal(err)
 	}
 
-	log.Print("Listening on " + listen + "...")
+	log.Println("Listening on " + listen + "...")
 	log.Fatal(http.Serve(l, mux))
 }

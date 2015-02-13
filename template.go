@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -73,14 +74,14 @@ func templateFuncMap() template.FuncMap {
 
 func buildTemplate(dir string, funcMap template.FuncMap) (*template.Template, error) {
 	var t *template.Template
-	return t, filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if info != nil && !info.IsDir() {
-			filetext, err := ioutil.ReadFile(path)
+	return t, filepath.Walk(dir, func(filePath string, info os.FileInfo, err error) error {
+		if info != nil && !info.IsDir() && path.Ext(filePath) == Config.GetString("TemplateExt") {
+			filetext, err := ioutil.ReadFile(filePath)
 			if err != nil {
 				return err
 			}
 			text := string(filetext)
-			name := path[len(dir)+1:]
+			name := filePath[len(dir)+1:]
 			name = strings.Replace(name, `\`, `/`, -1)
 
 			var tmpl *template.Template

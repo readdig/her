@@ -4,6 +4,7 @@ import (
 	"github.com/go-code/her/notify"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"sync"
 )
@@ -55,8 +56,10 @@ func (w *Watcher) Notify() {
 		for {
 			select {
 			case ev := <-watcher.Event:
-				templates = loadTemplate()
-				log.Println("event:", ev)
+				if path.Ext(ev.Name) == Config.GetString("TemplateExt") {
+					templates = loadTemplate()
+					log.Println("event:", ev)
+				}
 				continue
 			case err := <-watcher.Error:
 				log.Println("error:", err)

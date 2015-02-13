@@ -38,6 +38,10 @@ func loadConfig(a ...interface{}) *MergedConfig {
 		mergedConfig.config["TemplatePath"] = "view"
 	}
 
+	if mergedConfig.GetString("TemplateExt") == "" {
+		mergedConfig.config["TemplateExt"] = ".html"
+	}
+
 	if mergedConfig.GetString("CookieSecret") == "" {
 		mergedConfig.config["CookieSecret"] = "kN)A/hJ]ZsmHk#5'=Q'88zv6]vqfzS"
 	}
