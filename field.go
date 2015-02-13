@@ -63,13 +63,12 @@ func (field *BaseField) Errors() []string {
 func (field *BaseField) ValidatorMessage(attrs ...string) template.HTML {
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
+
 	result := ""
 	for _, err := range field.errors {
-		result += fmt.Sprintf(`<span %s>%s %s</span>`, attrsStr, field.text, err)
+		result += fmt.Sprintf(`<span%s>%s %s</span>`, attrsStr, field.text, err)
 	}
 
 	return template.HTML(result)
@@ -113,9 +112,7 @@ type TextAreaField struct {
 func (field *TextAreaField) Render(attrs ...string) template.HTML {
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 
 	return template.HTML(fmt.Sprintf(`<textarea id="%s" name="%s"%s>%s</textarea>`, field.name, field.name, attrsStr, field.value))
@@ -145,10 +142,9 @@ type SelectField struct {
 func (field *SelectField) Render(attrs ...string) template.HTML {
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
+
 	options := ""
 	for _, choice := range field.Choices {
 		selected := ""
@@ -197,9 +193,7 @@ type TextField struct {
 func (field *TextField) Render(attrs ...string) template.HTML {
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 	return template.HTML(fmt.Sprintf(`<input type="text" value="%s" name="%s" id="%s"%s>`, field.value, field.name, field.name, attrsStr))
 }
@@ -222,9 +216,7 @@ type PasswordField struct {
 func (field *PasswordField) Render(attrs ...string) template.HTML {
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 	return template.HTML(fmt.Sprintf(`<input type="password" name="%s" id="%s"%s>`, field.name, field.name, attrsStr))
 }
@@ -244,12 +236,9 @@ type RadioField struct {
 }
 
 func (field *RadioField) Render(attrs ...string) template.HTML {
-
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 	return template.HTML(fmt.Sprintf(`<input type="radio" name="%s" id="%s" value="%s"%s>`, field.name, field.name, field.value, attrsStr))
 }
@@ -270,12 +259,9 @@ type CheckField struct {
 }
 
 func (field *CheckField) Render(attrs ...string) template.HTML {
-
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 	return template.HTML(fmt.Sprintf(`<input type="checkbox" name="%s" id="%s" value="%s"%s>`, field.name, field.name, field.value, attrsStr))
 }
@@ -298,12 +284,9 @@ type SubmitField struct {
 }
 
 func (field *SubmitField) Render(attrs ...string) template.HTML {
-
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 	return template.HTML(fmt.Sprintf(`<input type="submit" name="%s" id="%s" value="%s"%s>`, field.name, field.name, attrsStr, field.value))
 }
@@ -325,12 +308,9 @@ type FileField struct {
 }
 
 func (field *FileField) Render(attrs ...string) template.HTML {
-
 	attrsStr := ""
 	if len(attrs) > 0 {
-		for _, attr := range attrs {
-			attrsStr += " " + attr
-		}
+		attrsStr = " " + strings.Join(attrs, " ")
 	}
 	return template.HTML(fmt.Sprintf(`<input type="file" name="%s" id="%s"%s>`, field.name, field.name, attrsStr))
 }
