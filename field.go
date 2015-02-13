@@ -29,7 +29,11 @@ type BaseField struct {
 }
 
 func (field *BaseField) Label(attrs ...string) template.HTML {
-	return template.HTML(fmt.Sprintf("<label for=\"%s\" %s>%s</label>", field.Name, strings.Join(attrs, " "), field.text))
+	attrsStr := ""
+	if len(attrs) > 0 {
+		attrsStr = " " + strings.Join(attrs, " ")
+	}
+	return template.HTML(fmt.Sprintf(`<label for="%s"%s>%s</label>`, field.name, attrsStr, field.text))
 }
 
 func (field *BaseField) HasErrors() bool {
@@ -57,9 +61,15 @@ func (field *BaseField) Errors() []string {
 }
 
 func (field *BaseField) ValidatorMessage(attrs ...string) template.HTML {
+	attrsStr := ""
+	if len(attrs) > 0 {
+		for _, attr := range attrs {
+			attrsStr += " " + attr
+		}
+	}
 	result := ""
 	for _, err := range field.errors {
-		result += fmt.Sprintf(`<span %s>%s %s</span>`, strings.Join(attrs, " "), field.Text(), err)
+		result += fmt.Sprintf(`<span %s>%s %s</span>`, attrsStr, field.text, err)
 	}
 
 	return template.HTML(result)
@@ -68,7 +78,7 @@ func (field *BaseField) ValidatorMessage(attrs ...string) template.HTML {
 func (field *BaseField) Validate() bool {
 	for _, validator := range field.validators {
 		if _, ok := validator.(Required); ok {
-			if ok, message := validator.CleanData(field.Value()); !ok {
+			if ok, message := validator.CleanData(field.value); !ok {
 				field.errors = append(field.errors, message)
 				return false
 			}
@@ -78,7 +88,7 @@ func (field *BaseField) Validate() bool {
 	result := true
 
 	for _, validator := range field.validators {
-		if ok, message := validator.CleanData(field.Value()); !ok {
+		if ok, message := validator.CleanData(field.value); !ok {
 			result = false
 			field.errors = append(field.errors, message)
 		}
@@ -108,7 +118,7 @@ func (field *TextAreaField) Render(attrs ...string) template.HTML {
 		}
 	}
 
-	return template.HTML(fmt.Sprintf(`<textarea id=%q name=%q%s>%s</textarea>`, field.name, field.name, attrsStr, field.value))
+	return template.HTML(fmt.Sprintf(`<textarea id="%s" name="%s"%s>%s</textarea>`, field.name, field.name, attrsStr, field.value))
 }
 
 func NewTextAreaField(name string, text string, value string, validators ...Validator) *TextAreaField {
@@ -145,10 +155,10 @@ func (field *SelectField) Render(attrs ...string) template.HTML {
 		if choice.value == field.value {
 			selected = " selected"
 		}
-		options += fmt.Sprintf(`<option value=%q%s>%s</option>`, choice.value, selected, choice.text)
+		options += fmt.Sprintf(`<option value="%s"%s>%s</option>`, choice.value, selected, choice.text)
 	}
 
-	return template.HTML(fmt.Sprintf(`<select id=%q name=%q%s>%s</select>`, field.name, field.name, attrsStr, options))
+	return template.HTML(fmt.Sprintf(`<select id="%s" name="%s"%s>%s</select>`, field.name, field.name, attrsStr, options))
 }
 
 func NewSelectField(name string, text string, choices []Choice, defaultValue string, validators ...Validator) *SelectField {
@@ -167,8 +177,8 @@ type HiddenField struct {
 	BaseField
 }
 
-func (field *HiddenField) Render(attrs ...string) template.HTML {
-	return template.HTML(fmt.Sprintf(`<input type="hidden" value=%q name=%q id=%q>`, field.value, field.name, field.name))
+func (field *HiddenField) Render() template.HTML {
+	return template.HTML(fmt.Sprintf(`<input type="hidden" value="%s" name="%s" id="%s">`, field.value, field.name, field.name))
 }
 
 func NewHiddenField(name string, value string) *HiddenField {
@@ -191,7 +201,7 @@ func (field *TextField) Render(attrs ...string) template.HTML {
 			attrsStr += " " + attr
 		}
 	}
-	return template.HTML(fmt.Sprintf(`<input type="text" value="%s" name=%q id=%q%s>`, field.value, field.name, field.name, attrsStr))
+	return template.HTML(fmt.Sprintf(`<input type="text" value="%s" name="%s" id="%s"%s>`, field.value, field.name, field.name, attrsStr))
 }
 
 func NewTextField(name string, text string, value string, validators ...Validator) *TextField {
@@ -216,7 +226,7 @@ func (field *PasswordField) Render(attrs ...string) template.HTML {
 			attrsStr += " " + attr
 		}
 	}
-	return template.HTML(fmt.Sprintf(`<input type="password" name=%q id=%q%s>`, field.name, field.name, attrsStr))
+	return template.HTML(fmt.Sprintf(`<input type="password" name="%s" id="%s"%s>`, field.name, field.name, attrsStr))
 }
 
 func NewPasswordField(name string, text string, validators ...Validator) *PasswordField {
@@ -241,7 +251,7 @@ func (field *RadioField) Render(attrs ...string) template.HTML {
 			attrsStr += " " + attr
 		}
 	}
-	return template.HTML(fmt.Sprintf(`<input type="radio" name=%q id=%q value=%s%s>`, field.name, field.name, field.value, attrsStr))
+	return template.HTML(fmt.Sprintf(`<input type="radio" name="%s" id="%s" value="%s"%s>`, field.name, field.name, field.value, attrsStr))
 }
 
 func NewRadioField(name, text, value string, validators ...Validator) *RadioField {
@@ -267,7 +277,7 @@ func (field *CheckField) Render(attrs ...string) template.HTML {
 			attrsStr += " " + attr
 		}
 	}
-	return template.HTML(fmt.Sprintf(`<input type="checkbox" name=%q id=%q value=%s%s>`, field.name, field.name, field.value, attrsStr))
+	return template.HTML(fmt.Sprintf(`<input type="checkbox" name="%s" id="%s" value="%s"%s>`, field.name, field.name, field.value, attrsStr))
 }
 
 func NewCheckField(name, text, value string, validators ...Validator) *CheckField {
@@ -295,7 +305,7 @@ func (field *SubmitField) Render(attrs ...string) template.HTML {
 			attrsStr += " " + attr
 		}
 	}
-	return template.HTML(fmt.Sprintf(`<input type="submit" name=%q id=%q%s value=%q>`, field.name, field.name, attrsStr, field.value))
+	return template.HTML(fmt.Sprintf(`<input type="submit" name="%s" id="%s" value="%s"%s>`, field.name, field.name, attrsStr, field.value))
 }
 
 func NewSubmitField(name, text, value string, validators ...Validator) *SubmitField {
@@ -322,7 +332,7 @@ func (field *FileField) Render(attrs ...string) template.HTML {
 			attrsStr += " " + attr
 		}
 	}
-	return template.HTML(fmt.Sprintf(`<input type="file" name=%q id=%q%s>`, field.name, field.name, attrsStr))
+	return template.HTML(fmt.Sprintf(`<input type="file" name="%s" id="%s"%s>`, field.name, field.name, attrsStr))
 }
 
 func NewFileField(name, text string, validators ...Validator) *FileField {
