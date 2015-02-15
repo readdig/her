@@ -130,8 +130,8 @@ func NewTextAreaField(name string, text string, value string, validators ...Vali
 
 // select
 type Choice struct {
-	text  string
-	value string
+	Text  string
+	Value string
 }
 
 type SelectField struct {
@@ -148,10 +148,10 @@ func (field *SelectField) Render(attrs ...string) template.HTML {
 	options := ""
 	for _, choice := range field.Choices {
 		selected := ""
-		if choice.value == field.value {
+		if choice.Value == field.value {
 			selected = " selected"
 		}
-		options += fmt.Sprintf(`<option value="%s"%s>%s</option>`, choice.value, selected, choice.text)
+		options += fmt.Sprintf(`<option value="%s"%s>%s</option>`, choice.Value, selected, choice.Text)
 	}
 
 	return template.HTML(fmt.Sprintf(`<select id="%s" name="%s"%s>%s</select>`, field.name, field.name, attrsStr, options))
