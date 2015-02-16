@@ -121,18 +121,17 @@ func (ctx *Context) GetToken() string {
 // SetCookie adds a cookie header to the response.
 func (ctx *Context) SetCookie(name string, value string, a ...int) {
 	var utctime time.Time
-	var age int64
+	var age int64 // seconds
 	if len(a) > 0 {
 		age = int64(a[0])
 	}
 	if age == 0 {
-		// 2^31 - 1 seconds (roughly 2038)
-		utctime = time.Unix(2147483647, 0)
+		utctime = time.Unix(time.Now().Unix()+86400, 0)
 	} else {
 		utctime = time.Unix(time.Now().Unix()+age, 0)
 	}
 	cookie := http.Cookie{Name: name, Value: value, Expires: utctime}
-	ctx.AddHeader("Set-Cookie", cookie.String())
+	ctx.SetHeader("Set-Cookie", cookie.String())
 }
 
 // GetCookie get a cookie header to the response.
@@ -144,6 +143,11 @@ func (ctx *Context) GetCookie(name string) string {
 		return cookie.Value
 	}
 	return ""
+}
+
+func (ctx *Context) DeleteCookie(key string) {
+	cookie := http.Cookie{Name: key, MaxAge: -1}
+	ctx.SetHeader("Set-Cookie", cookie.String())
 }
 
 func getCookieSig(key string, val []byte, timestamp string) string {
