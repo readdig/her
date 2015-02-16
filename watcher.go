@@ -58,7 +58,6 @@ func (w *Watcher) Notify() {
 			case ev := <-watcher.Event:
 				if path.Ext(ev.Name) == Config.GetString("TemplateExt") {
 					templates = loadTemplate()
-					log.Println("event:", ev)
 				}
 				continue
 			case err := <-watcher.Error:
