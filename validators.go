@@ -120,7 +120,7 @@ type NumberRange struct {
 	Message string
 }
 
-func (v NumberRange) CleanData(value int) (bool, string) {
+func (v NumberRange) CleanData(value string) (bool, string) {
 
 	message := ""
 	minMessage := "值必须大于 %d 。"
@@ -131,20 +131,26 @@ func (v NumberRange) CleanData(value int) (bool, string) {
 		message = v.Message
 	}
 
-	//	println(value < v.Min && v.Max == 0)
-	if value < v.Min && v.Max == 0 {
+	val, err := strconv.Atoi(value)
+	if err != nil {
+		message = "必须是数字。"
+		return false, message
+	}
+
+	//	println(val < v.Min && v.Max == 0)
+	if val < v.Min && v.Max == 0 {
 		if message == "" {
 			message = minMessage
 		}
 		return false, fmt.Sprintf(message, v.Min)
 	}
-	if value > v.Max && v.Min == 0 {
+	if val > v.Max && v.Min == 0 {
 		if message == "" {
 			message = maxMessage
 		}
 		return false, fmt.Sprintf(message, v.Max)
 	}
-	if value < v.Min || v.Max > 0 && value > v.Max {
+	if val < v.Min || v.Max > 0 && val > v.Max {
 		if message == "" {
 			message = minAndMaxMessage
 		}
