@@ -22,9 +22,11 @@ func InitForm(ctx *Context, f interface{}) *Form {
 	for i := 0; i < formv.NumField(); i++ {
 		field := formv.Field(i)
 
-		f, ok := field.Interface().(Field)
-		if ok {
-			form.fields[f.Name()] = f
+		if !field.IsNil() {
+			f, ok := field.Interface().(Field)
+			if ok {
+				form.fields[f.Name()] = f
+			}
 		}
 	}
 	return &form
@@ -45,7 +47,7 @@ func (form *Form) Errors() []string {
 	var errors []string
 	for _, field := range form.fields {
 		for _, err := range field.Errors() {
-			errors = append(errors, err)
+			errors = append(errors, field.Text()+" "+err)
 		}
 	}
 	return errors

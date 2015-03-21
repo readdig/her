@@ -267,7 +267,6 @@ func (field *CheckField) Render(attrs ...string) template.HTML {
 }
 
 func NewCheckField(name, text, value string, validators ...Validator) *CheckField {
-
 	field := CheckField{}
 	field.name = name
 	field.text = text
