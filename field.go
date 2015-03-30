@@ -221,10 +221,11 @@ func (field *PasswordField) Render(attrs ...string) template.HTML {
 	return template.HTML(fmt.Sprintf(`<input type="password" name="%s" id="%s"%s>`, field.name, field.name, attrsStr))
 }
 
-func NewPasswordField(name string, text string, validators ...Validator) *PasswordField {
+func NewPasswordField(name string, text string, value string, validators ...Validator) *PasswordField {
 	field := PasswordField{}
 	field.name = name
 	field.text = text
+	field.value = value
 	field.validators = validators
 
 	return &field
