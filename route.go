@@ -18,6 +18,8 @@ type Route struct {
 	parent parentRoute
 	// Request handler for the route.
 	handler Handler
+	// filter for the route
+	filter Filter
 	// List of matchers.
 	matchers []matcher
 	// Manager for the variables from host and path.
@@ -50,6 +52,9 @@ func (r *Route) Match(req *http.Request, match *RouteMatch) bool {
 	}
 	if match.Handler == nil {
 		match.Handler = r.handler
+	}
+	if match.Filter == nil {
+		match.Filter = r.filter
 	}
 	if match.Vars == nil {
 		match.Vars = make([]string, 0)
@@ -487,4 +492,11 @@ func (r *Route) getRegexpGroup() *routeRegexpGroup {
 		}
 	}
 	return r.regexp
+}
+
+func (r *Route) Filter(filter Filter) *Route {
+	if r.err == nil {
+		r.filter = filter
+	}
+	return r
 }

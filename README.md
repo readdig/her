@@ -200,8 +200,5 @@ if ctx.Request.Method == "POST" {
 - jimmykuu [wtforms](https://github.com/jimmykuu/wtforms) 表单
 - fsnotify [fsnotify](https://github.com/howeyc/fsnotify) 模版刷新
 
-### 开发成员
-John, Monkey
-
 ### LICENSE
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)

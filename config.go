@@ -31,7 +31,7 @@ func loadConfig(a ...interface{}) *MergedConfig {
 	}
 
 	if mergedConfig.GetInt("Port") == 0 {
-		mergedConfig.config["Port"] = 8080
+		mergedConfig.config["Port"] = float64(8080)
 	}
 
 	if mergedConfig.GetString("TemplatePath") == "" {
@@ -82,7 +82,7 @@ func (c *MergedConfig) GetString(key string) string {
 func (c *MergedConfig) GetInt(key string) int {
 	val, ok := c.config[key]
 	if !ok {
-		return -1
+		return 0
 	}
 	return int(val.(float64))
 }
@@ -98,7 +98,7 @@ func (c *MergedConfig) GetBool(key string) bool {
 func (c *MergedConfig) GetFloat(key string) float64 {
 	val, ok := c.config[key]
 	if !ok {
-		return -1
+		return 0
 	}
 	return val.(float64)
 }

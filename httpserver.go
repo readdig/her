@@ -65,15 +65,22 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	var match RouteMatch
 	var handler Handler
+	var filter Filter
 	var vars []string
 	if r.Match(req, &match) {
 		handler = match.Handler
 		vars = match.Vars
+		filter = match.Filter
 
 		for k, v := range match.Params {
 			ctx.Params[k] = v
 		}
 	}
+
+	if filter != nil {
+		routeHandlerFilter(&ctx, filter)
+	}
+
 	if handler == nil {
 		ctx.NotFound()
 		return
@@ -198,6 +205,7 @@ func (r *Router) Schemes(schemes ...string) *Route {
 type RouteMatch struct {
 	Route   *Route
 	Handler Handler
+	Filter  Filter
 	Vars    []string
 	Params  map[string]string
 }
